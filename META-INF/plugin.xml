@@ -1,0 +1,38 @@
+<idea-plugin version="2">
+    <id>com.timepath.quakec</id>
+    <name>QuakeC</name>
+    <version>1.0-SNAPSHOT</version>
+    <vendor email="andrew.hardaker1995@gmail.com" url="http://timepath.github.io">Andrew Hardaker</vendor>
+
+    <description><![CDATA[
+    QuakeC language support
+    ]]></description>
+
+    <change-notes><![CDATA[
+
+    ]]></change-notes>
+
+    <idea-version since-build="107.105"/>
+
+    <depends>com.intellij.modules.lang</depends>
+
+    <application-components>
+    </application-components>
+
+    <project-components>
+    </project-components>
+
+    <actions>
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="com.timepath.quakec.QCFileTypeFactory"/>
+        <lang.parserDefinition implementationClass="com.timepath.quakec.QCParserDefinition"
+                               language="QuakeC"/>
+        <lang.syntaxHighlighterFactory implementationClass="com.timepath.quakec.QCSyntaxHighlighterFactory"
+                                       key="QuakeC"/>
+        <colorSettingsPage implementation="com.timepath.quakec.QCColorSettingsPage"/>
+        <completion.contributor implementationClass="com.timepath.quakec.QCCompletionContributor"
+                                language="QuakeC"/>
+    </extensions>
+</idea-plugin>
