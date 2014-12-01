@@ -23,7 +23,7 @@ LINE_WS=[\ \t\f]
 WHITE_SPACE=({LINE_WS}|{EOL})+
 
 SPACE=[ \t\n\x0B\f\r]+
-PREPROCESSOR=#define((.*\\[ \t\n\x0B\f\r]*\n)+.*)|#.*
+PREPROCESSOR=#[ \t\n\x0B\f\r]*(define|include|(un|ifn?)def|endif|el(if|se)|if|warning|error|pragma)(.*\\[ \t\n\x0B\f\r]*\n)*.*
 COMMENT_LINE="//".*
 COMMENT_BLOCK=[\/][*](([^*]+|[*]+[^\/*])*[*]*)[*][\/]
 NUMBER=0x[_0-9a-fA-F]+|[_0-9]*(\.[_0-9]*)?
@@ -71,6 +71,7 @@ ID=[a-zA-Z_][a-zA-Z_0-9]*
   "."                  { return OP_DOT; }
   ";"                  { return SEMI; }
   ":"                  { return COLON; }
+  "?"                  { return QUESTION; }
   "#"                  { return HASH; }
   "{"                  { return BRACE_OPEN; }
   "}"                  { return BRACE_CLOSE; }
@@ -100,6 +101,7 @@ ID=[a-zA-Z_][a-zA-Z_0-9]*
   "switch"             { return KW_SWITCH; }
   "case"               { return KW_CASE; }
   "default"            { return KS_DEFAULT; }
+  "typedef"            { return KS_TYPEDEF; }
 
   {SPACE}              { return SPACE; }
   {PREPROCESSOR}       { return PREPROCESSOR; }

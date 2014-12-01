@@ -1,5 +1,9 @@
 // http://www.gamers.org/dEngine/quake/spec/quake-spec34/index2.htm
 // Based on: https://github.com/JetBrains/Grammar-Kit/blob/master/testData/generator/ExprParser.bnf
+// TODO: switch/case scope
+// TODO: generate sensible parse tree
+// TODO: macro expansion
+// TODO: string continuation (escape, gap)
 // TODO: https://devnet.jetbrains.com/thread/449622?tstart=330
 {
     parserClass             = "com.timepath.quakec.parser.QCParser"
@@ -17,14 +21,6 @@
     tokenTypeClass          = "com.timepath.quakec.psi.QCTokenType"
 
     tokens = [
-        space               = 'regexp:\s+'
-        preprocessor        = 'regexp:#define((.*\\\s*\n)+.*)|#.*'
-        comment_line        = 'regexp://.*'
-        comment_block       = 'regexp:[\/][*](([^*]+|[*]+[^\/*])*[*]*)[*][\/]'
-        number              = 'regexp:0x[_0-9a-fA-F]+|[_0-9]*(\.[_0-9]*)?'
-        string              = "regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\.)*\")"
-        id                  = 'regexp:[a-zA-Z_][a-zA-Z_0-9]*'
-
         OP_ASSIGN='='
         OP_ADDA='+='
         OP_SUBA='-='
@@ -68,6 +64,7 @@
 
         SEMI=';'
         COLON=':'
+        QUESTION='?'
         HASH='#'
 
         BRACE_OPEN='{'
@@ -101,72 +98,84 @@
         KW_SWITCH='switch'
         KW_CASE='case'
         KS_DEFAULT='default'
+        KS_TYPEDEF='typedef'
+
+        space               = 'regexp:\s+'
+        preprocessor        = 'regexp:#\s*(define|include|(un|ifn?)def|endif|el(if|se)|if|warning|error|pragma)(.*\\\s*\n)*.*'
+        comment_line        = 'regexp://.*'
+        comment_block       = 'regexp:[\/][*](([^*]+|[*]+[^\/*])*[*]*)[*][\/]'
+        number              = 'regexp:0x[_0-9a-fA-F]+|[_0-9]*(\.[_0-9]*)?'
+        string              = "regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\.)*\")"
+        id                  = 'regexp:[a-zA-Z_][a-zA-Z_0-9]*'
     ]
-    extends("expr_.+") = expr_
+    extends("expr_.+")      = expression
+    extends("stat_.+")      = statement
 }
 
-root                        ::= scope_root
-
-identifier                  ::= id
-literal                     ::= number | string // TODO: | '#' number
-
-type_modifier               ::= 'local' | 'const' | 'var' | 'noref'
-type_arg                    ::= '...' | type (id ('=' expr)?)?
-type_args                   ::= type_arg? (',' type_arg)*
-private type                ::= type_modifier* '.'? ('void' | 'float' | 'vector' | 'string' | 'entity' | id) ('(' type_args ')')?
-
-private block               ::= '{' scope_block '}'
-
+root                        ::= (root_item)*
+private root_item           ::= !(<<eof>>) scope_root {pin=1}
 comment                     ::= (preprocessor | comment_line | comment_block)
-private x                   ::= comment? space?
+private x                   ::= (space? comment)+ space? | space
+private scope_common        ::= var | x | ';'
+private scope_root          ::= func | scope_common
+private scope_block         ::= statement | scope_common
 
-private scope_common        ::= expr? x ';'
-                            | var
-                            | comment
+identifier                  ::= id | type_modifier_
+builtin                     ::= '#' number
+literal                     ::= number | string
 
-private scope_root          ::= (scope_common | func)*
-private scope_block         ::= (logic | scope_common | block)*
+private type_modifier_      ::= 'local' | 'const' | 'var' | 'noref'
+type_modifier               ::= type_modifier_
+type_name                   ::= 'void' | 'float' | 'vector' | 'string' | 'entity' | identifier
 
-var_value                   ::= expr
-var_entry                   ::= id ('[' expr ']')? ('=' var_value)?
-var_list                    ::= var_entry (',' var_entry)*
-var                         ::= type var_list ';'
+type_arg                    ::= type (x? type_func)? (x? identifier (x? '=' x? expression)?)?
+type_args                   ::= '...' | type_arg? (x? ',' x? type_arg)* (x? ',' x? ('...' | type_arg))?
+private type_func           ::= '(' x? type_args x? ')'
+private type                ::= (type_modifier x?)* '.'? type_name
 
-func                        ::= type x (
-                                    // old style
-                                    id x ('=' x block x)? ';'
-                                    // new style
-                                    | id x '(' type_args ')' x (';' | block)
-                                )
+private block               ::= '{' x? scope_block* x? '}'
 
-private logic_label         ::= ':' x id
-private logic_continue      ::= 'continue' x id?
-private logic_break         ::= 'break' x id?
-private logic_goto          ::= 'goto' x id
-private logic_return        ::= 'return' expr?
-private logic_if            ::= 'if' x '(' x expr x ')'
-private logic_else          ::= 'else'
-private logic_while         ::= 'while' x '(' x expr x ')'
-private logic_while_do      ::= 'do' x block x logic_while // TODO: allow without block
-private logic_for           ::= 'for' x '(' x expr? x ';' x expr? x ';' x expr? x ')'
-private logic_switch        ::= 'switch' x '(' x expr x ')'
-private logic_case          ::= 'case' x expr x ':'
-private logic_default       ::= 'default' x ':'
-private logic               ::= (logic_continue | logic_break | logic_goto | logic_return) x ';'
-                            | logic_if
-                            | logic_else
-                            | logic_while
-                            | logic_while_do
-                            | logic_for
-                            | logic_switch
-                            | logic_case
-                            | logic_default
-                            | logic_label
+var_entry                   ::= identifier ('[' expression ']')? (x? '=' x? expression)?
+var_list                    ::= var_entry (x? ',' x? var_entry)*
+var_normal                  ::= type x? var_list x? ';'
+var_func                    ::= var_func_
+private var_func_           ::= type x? type_func x? identifier x? ('=' x? identifier x?)? ';'
+var_typedef                 ::= 'typedef' x? type x? (type_func x?)? identifier x? ';'
+var                         ::= var_normal | var_func | var_typedef
+
+private func_old            ::= type x? type_func x? identifier x? (';' | '=' x? (builtin x? ';' | block (x? ';')?))?
+private func_new            ::= type x? identifier x? type_func x? ('=' x? builtin | block | ';')
+func                        ::= var_func_ | func_old | func_new
+
+statement                   ::= stat_label
+                            | stat_block
+                            | stat_select
+                            | stat_iter
+                            | stat_jump
+                            | stat_expr
+
+private stat_block          ::= block x?
+stat_expr                   ::= expression? x? ';' x?
+
+stat_label                  ::= ':' identifier x? statement
+                            | ('case' x? expression | 'default') x? ':' x? /* FIXME: (scope_block)* */ stat_jump
+stat_jump                   ::= ('continue' (x? identifier)? | 'break' (x? identifier)? | 'goto' (x? identifier) | 'return' (x? expression)?) x? ';' x?
+private stat_select         ::= stat_if
+                            | stat_switch
+stat_if                     ::= 'if' x? '(' x? expression x? ')' x? statement ('else' x? statement)?
+stat_switch                 ::= 'switch' x? '(' x? expression x? ')' x? stat_block
+private stat_while          ::= 'while' x? '(' x? expression x? ')'
+stat_while_do               ::= stat_while x? statement
+stat_do_while               ::= 'do' x? statement x? stat_while x? ';' x?
+stat_for                    ::= 'for' x? '(' x? expression? x? ';' x? expression? x? ';' x? expression? x? ')' x? statement
+stat_iter                   ::= stat_while_do
+                            | stat_do_while
+                            | stat_for
 
 // http://en.wikipedia.org/wiki/Order_of_operations#Programming_languages
 // weak -> strong : split first -> last
-expr                        ::= expr_comma | expr_
-expr_                       ::= group_assign
+expression                  ::= (expr_comma | expr_assign | expr_const)
+private expr_const          ::= expr_elvis
                             | expr_or
                             | expr_and
                             | expr_or_bit
@@ -181,40 +190,46 @@ expr_                       ::= group_assign
                             | group_access
                             | group_primary
 
-expr_comma                  ::= expr_ x ',' x expr_
-private group_assign        ::= expr_elvis
-                            | expr_assign
-expr_elvis                  ::= expr_ x '?' x expr_elvis x ':' x expr_elvis x
-expr_assign                 ::= expr_ x ('=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '>>=') x expr_ {rightAssociative=true}
-expr_or                     ::= expr_ x '||' x expr_
-expr_and                    ::= expr_ x '&&' x expr_
-expr_or_bit                 ::= expr_ x '|' x expr_
-expr_xor                    ::= expr_ x '^' x expr_
-expr_and_bit                ::= expr_ x '&' x expr_
-expr_eq                     ::= expr_ x ('==' | '!=') x expr_
-expr_cmp                    ::= expr_ x ('<' | '<=' | '>' | '>=') x expr_
-expr_shift                  ::= expr_ x ('<<' | '>>') x expr_
-expr_add                    ::= expr_ x ('+' | '-') x expr_
-expr_fac                    ::= expr_ x ('*' | '/' | '%') x expr_
+private op_comma            ::= ','
+private op_assign           ::= ('=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '>>=')
+private op_eq               ::= ('==' | '!=')
+private op_cmp              ::= ('<' | '<=' | '>' | '>=')
+private op_shift            ::= ('<<' | '>>')
+private op_add              ::= ('+' | '-')
+private op_fac              ::= ('*' | '/' | '%')
+private op_unary            ::= ('!' | '~' | '-' | '+')
+private op_inc              ::= ('++' | '--')
+
+expr_comma                  ::= expression x? op_comma x? expression
+expr_assign                 ::= expression x? op_assign x? expression {rightAssociative=true}
+expr_elvis                  ::= expression x? '?' (x? expr_elvis x? ':' x? expr_elvis)
+expr_or                     ::= expression x? '||' x? expression
+expr_and                    ::= expression x? '&&' x? expression
+expr_or_bit                 ::= expression x? '|' x? expression
+expr_xor                    ::= expression x? '^' x? expression
+expr_and_bit                ::= expression x? '&' x? expression
+expr_eq                     ::= expression x? op_eq x? expression
+expr_cmp                    ::= expression x? op_cmp x? expression
+expr_shift                  ::= expression x? op_shift x? expression
+expr_add                    ::= expression x? op_add x? expression
+expr_fac                    ::= expression x? op_fac x? expression
 private group_unary         ::= expr_unary_pre
                             | expr_unary_post
-expr_unary_pre              ::= ('!' | '~' | '-' | '+' | '++' | '--') x expr_
-expr_unary_post             ::= expr_ x ('++' | '--')
+expr_unary_pre              ::= (op_unary | op_inc) x? expression
+expr_unary_post             ::= expression x? op_inc
 private group_access        ::= expr_call
                             | expr_index
                             | expr_ref
-// FIXME: Produces nonsensical parse tree
-expr_ref                    ::= expr_ x '.' x ('(' expr_ ')' | expr_)
-arg_list                    ::= '(' [ !')' x expr_ x (',' x expr_ x)* ] ')' {pin(".*")=1}
-expr_call                   ::= expr_ x arg_list
-private arr_idx             ::= '[' [ !']' x expr_ x ] ']' {pin(".*")=1}
-expr_index                  ::= expr_ x arr_idx
+expr_ref                    ::= expression x? '.' x? ('(' x? expression x? ')' | expression)
+arg_list                    ::= expression (x? ',' x? expression)*
+expr_call                   ::= expression x? '(' x? arg_list? x? ')'
+expr_index                  ::= expression x? '[' x? (expression) x? ']'
 private group_primary       ::= expr_i18n
                             | expr_simple_ref
                             | expr_literal
                             | expr_paren
 expr_simple_ref             ::= identifier {elementType=expr_ref}
 expr_literal                ::= literal
-expr_paren                  ::= '(' x expr_ x ')'
+expr_paren                  ::= '(' x? expression x? ')'
 
-expr_i18n                   ::= '_' x '(' (x string)* ')'
+expr_i18n                   ::= '_' x? '(' (x? string)* x? ')'
