@@ -1,5 +1,5 @@
 // http://www.gamers.org/dEngine/quake/spec/quake-spec34/index2.htm
-// http://dev.xonotic.org/projects/xonotic/wiki/Introduction_to_QuakeC.html
+// https://gitlab.com/xonotic/xonotic/wikis/Introduction_to_QuakeC
 // Based on: https://github.com/JetBrains/Grammar-Kit/blob/master/testData/generator/ExprParser.bnf
 // TODO: generate sensible parse tree
 // TODO: macro expansion
