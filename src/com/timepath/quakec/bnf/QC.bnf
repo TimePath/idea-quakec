@@ -121,7 +121,8 @@ private scope_common        ::= var | s | ';'
 private scope_root          ::= func | scope_common
 private scope_block         ::= statement | scope_common
 
-identifier                  ::= id | type_modifier_
+identifier                  ::= id | type_modifier_ {mixin="com.timepath.quakec.psi.impl.QCNamedElementImpl"
+                                                    implements="com.timepath.quakec.psi.QCNamedElement"}
 builtin                     ::= '#' number
 literal                     ::= number | string
 

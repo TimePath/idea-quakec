@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class QCCompletionContributor extends CompletionContributor {
     public QCCompletionContributor() {
         extend(CompletionType.BASIC,
-                PlatformPatterns.psiElement(QCTypes.ID).withLanguage(QCLanguage.INSTANCE),
+                PlatformPatterns.psiElement(QCTypes.IDENTIFIER).withLanguage(QCLanguage.INSTANCE),
                 new CompletionProvider<CompletionParameters>() {
                     public void addCompletions(@NotNull CompletionParameters parameters,
                                                ProcessingContext context,

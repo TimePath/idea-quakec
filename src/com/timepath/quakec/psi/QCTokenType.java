@@ -15,6 +15,6 @@ public class QCTokenType extends IElementType {
 
     @Override
     public String toString() {
-        return "TokenTypeImpl." + super.toString();
+        return "QCTokenType." + super.toString();
     }
 }
