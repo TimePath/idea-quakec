@@ -1,4 +1,5 @@
 // http://www.gamers.org/dEngine/quake/spec/quake-spec34/index2.htm
+// http://dev.xonotic.org/projects/xonotic/wiki/Introduction_to_QuakeC.html
 // Based on: https://github.com/JetBrains/Grammar-Kit/blob/master/testData/generator/ExprParser.bnf
 // TODO: generate sensible parse tree
 // TODO: macro expansion
@@ -123,7 +124,7 @@ identifier                  ::= id | type_modifier_
 builtin                     ::= '#' number
 literal                     ::= number | string
 
-private type_modifier_      ::= 'local' | 'const' | 'var' | 'noref'
+private type_modifier_      ::= 'local' | 'const' | 'noref'
 type_modifier               ::= type_modifier_
 type_name                   ::= 'void' | 'float' | 'vector' | 'string' | 'entity' | identifier
 
@@ -140,7 +141,7 @@ var_normal                  ::= type s? var_list s? ';'
 var_func                    ::= var_func_
 private var_func_           ::= type s? type_func s? identifier s? ('=' s? identifier s?)? ';'
 var_typedef                 ::= 'typedef' s? type s? (type_func s?)? identifier s? ';'
-var                         ::= var_normal | var_func | var_typedef
+var                         ::= ('var' s?)? (var_normal | var_func | var_typedef)
 
 private func_old            ::= type s? type_func s? identifier s? (';' | '=' s? (builtin s? ';' | block (s? ';')?))?
 private func_new            ::= type s? identifier s? type_func s? ('=' s? builtin | block | ';')
