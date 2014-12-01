@@ -115,8 +115,8 @@
 root                        ::= (root_item)*
 private root_item           ::= !(<<eof>>) scope_root {pin=1}
 comment                     ::= (preprocessor | comment_line | comment_block)
-private x                   ::= (space? comment)+ space? | space
-private scope_common        ::= var | x | ';'
+private s                   ::= (space? comment)+ space? | space
+private scope_common        ::= var | s | ';'
 private scope_root          ::= func | scope_common
 private scope_block         ::= statement | scope_common
 
@@ -128,23 +128,23 @@ private type_modifier_      ::= 'local' | 'const' | 'var' | 'noref'
 type_modifier               ::= type_modifier_
 type_name                   ::= 'void' | 'float' | 'vector' | 'string' | 'entity' | identifier
 
-type_arg                    ::= type (x? type_func)? (x? identifier (x? '=' x? expression)?)?
-type_args                   ::= '...' | type_arg? (x? ',' x? type_arg)* (x? ',' x? ('...' | type_arg))?
-private type_func           ::= '(' x? type_args x? ')'
-private type                ::= (type_modifier x?)* '.'? type_name
+type_arg                    ::= type (s? type_func)? (s? identifier (s? '=' s? expression)?)?
+type_args                   ::= '...' | type_arg? (s? ',' s? type_arg)* (s? ',' s? ('...' | type_arg))?
+private type_func           ::= '(' s? type_args s? ')'
+private type                ::= (type_modifier s?)* '.'? type_name
 
-private block               ::= '{' x? scope_block* x? '}'
+private block               ::= '{' s? scope_block* s? '}'
 
-var_entry                   ::= identifier ('[' expression ']')? (x? '=' x? expression)?
-var_list                    ::= var_entry (x? ',' x? var_entry)*
-var_normal                  ::= type x? var_list x? ';'
+var_entry                   ::= identifier ('[' expression ']')? (s? '=' s? expression)?
+var_list                    ::= var_entry (s? ',' s? var_entry)*
+var_normal                  ::= type s? var_list s? ';'
 var_func                    ::= var_func_
-private var_func_           ::= type x? type_func x? identifier x? ('=' x? identifier x?)? ';'
-var_typedef                 ::= 'typedef' x? type x? (type_func x?)? identifier x? ';'
+private var_func_           ::= type s? type_func s? identifier s? ('=' s? identifier s?)? ';'
+var_typedef                 ::= 'typedef' s? type s? (type_func s?)? identifier s? ';'
 var                         ::= var_normal | var_func | var_typedef
 
-private func_old            ::= type x? type_func x? identifier x? (';' | '=' x? (builtin x? ';' | block (x? ';')?))?
-private func_new            ::= type x? identifier x? type_func x? ('=' x? builtin | block | ';')
+private func_old            ::= type s? type_func s? identifier s? (';' | '=' s? (builtin s? ';' | block (s? ';')?))?
+private func_new            ::= type s? identifier s? type_func s? ('=' s? builtin | block | ';')
 func                        ::= var_func_ | func_old | func_new
 
 statement                   ::= stat_label
@@ -154,20 +154,20 @@ statement                   ::= stat_label
                             | stat_jump
                             | stat_expr
 
-private stat_block          ::= block x?
-stat_expr                   ::= expression? x? ';' x?
+private stat_block          ::= block s?
+stat_expr                   ::= expression? s? ';' s?
 
-stat_label                  ::= ':' identifier x? statement
-                            | ('case' x? expression | 'default') x? ':' x? /* FIXME: (scope_block)* */ stat_jump
-stat_jump                   ::= ('continue' (x? identifier)? | 'break' (x? identifier)? | 'goto' (x? identifier) | 'return' (x? expression)?) x? ';' x?
+stat_label                  ::= ':' identifier s? statement
+                            | ('case' s? expression | 'default') s? ':' s? /* FIXME: (scope_block)* */ stat_jump
+stat_jump                   ::= ('continue' (s? identifier)? | 'break' (s? identifier)? | 'goto' (s? identifier) | 'return' (s? expression)?) s? ';' s?
 private stat_select         ::= stat_if
                             | stat_switch
-stat_if                     ::= 'if' x? '(' x? expression x? ')' x? statement ('else' x? statement)?
-stat_switch                 ::= 'switch' x? '(' x? expression x? ')' x? stat_block
-private stat_while          ::= 'while' x? '(' x? expression x? ')'
-stat_while_do               ::= stat_while x? statement
-stat_do_while               ::= 'do' x? statement x? stat_while x? ';' x?
-stat_for                    ::= 'for' x? '(' x? expression? x? ';' x? expression? x? ';' x? expression? x? ')' x? statement
+stat_if                     ::= 'if' s? '(' s? expression s? ')' s? statement ('else' s? statement)?
+stat_switch                 ::= 'switch' s? '(' s? expression s? ')' s? stat_block
+private stat_while          ::= 'while' s? '(' s? expression s? ')'
+stat_while_do               ::= stat_while s? statement
+stat_do_while               ::= 'do' s? statement s? stat_while s? ';' s?
+stat_for                    ::= 'for' s? '(' s? expression? s? ';' s? expression? s? ';' s? expression? s? ')' s? statement
 stat_iter                   ::= stat_while_do
                             | stat_do_while
                             | stat_for
@@ -200,36 +200,36 @@ private op_fac              ::= ('*' | '/' | '%')
 private op_unary            ::= ('!' | '~' | '-' | '+')
 private op_inc              ::= ('++' | '--')
 
-expr_comma                  ::= expression x? op_comma x? expression
-expr_assign                 ::= expression x? op_assign x? expression {rightAssociative=true}
-expr_elvis                  ::= expression x? '?' (x? expr_elvis x? ':' x? expr_elvis)
-expr_or                     ::= expression x? '||' x? expression
-expr_and                    ::= expression x? '&&' x? expression
-expr_or_bit                 ::= expression x? '|' x? expression
-expr_xor                    ::= expression x? '^' x? expression
-expr_and_bit                ::= expression x? '&' x? expression
-expr_eq                     ::= expression x? op_eq x? expression
-expr_cmp                    ::= expression x? op_cmp x? expression
-expr_shift                  ::= expression x? op_shift x? expression
-expr_add                    ::= expression x? op_add x? expression
-expr_fac                    ::= expression x? op_fac x? expression
+expr_comma                  ::= expression s? op_comma s? expression
+expr_assign                 ::= expression s? op_assign s? expression {rightAssociative=true}
+expr_elvis                  ::= expression s? '?' (s? expr_elvis s? ':' s? expr_elvis)
+expr_or                     ::= expression s? '||' s? expression
+expr_and                    ::= expression s? '&&' s? expression
+expr_or_bit                 ::= expression s? '|' s? expression
+expr_xor                    ::= expression s? '^' s? expression
+expr_and_bit                ::= expression s? '&' s? expression
+expr_eq                     ::= expression s? op_eq s? expression
+expr_cmp                    ::= expression s? op_cmp s? expression
+expr_shift                  ::= expression s? op_shift s? expression
+expr_add                    ::= expression s? op_add s? expression
+expr_fac                    ::= expression s? op_fac s? expression
 private group_unary         ::= expr_unary_pre
                             | expr_unary_post
-expr_unary_pre              ::= (op_unary | op_inc) x? expression
-expr_unary_post             ::= expression x? op_inc
+expr_unary_pre              ::= (op_unary | op_inc) s? expression
+expr_unary_post             ::= expression s? op_inc
 private group_access        ::= expr_call
                             | expr_index
                             | expr_ref
-expr_ref                    ::= expression x? '.' x? ('(' x? expression x? ')' | expression)
-arg_list                    ::= expression (x? ',' x? expression)*
-expr_call                   ::= expression x? '(' x? arg_list? x? ')'
-expr_index                  ::= expression x? '[' x? (expression) x? ']'
+expr_ref                    ::= expression s? '.' s? ('(' s? expression s? ')' | expression)
+arg_list                    ::= expression (s? ',' s? expression)*
+expr_call                   ::= expression s? '(' s? arg_list? s? ')'
+expr_index                  ::= expression s? '[' s? (expression) s? ']'
 private group_primary       ::= expr_i18n
                             | expr_simple_ref
                             | expr_literal
                             | expr_paren
 expr_simple_ref             ::= identifier {elementType=expr_ref}
 expr_literal                ::= literal
-expr_paren                  ::= '(' x? expression x? ')'
+expr_paren                  ::= '(' s? expression s? ')'
 
-expr_i18n                   ::= '_' x? '(' (x? string)* x? ')'
+expr_i18n                   ::= '_' s? '(' (s? string)* s? ')'
