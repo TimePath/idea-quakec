@@ -91,6 +91,7 @@
         KW_GOTO='goto'
         KW_RETURN='return'
         KW_IF='if'
+        KW_NOT='not'
         KW_ELSE='else'
         KW_WHILE='while'
         KW_DO='do'
@@ -162,7 +163,7 @@ stat_case                   ::= ('case' s? expression | 'default') s? ':'
 stat_jump                   ::= ('continue' (s? identifier)? | 'break' (s? identifier)? | 'goto' (s? identifier) | 'return' (s? expression)?) s? ';' s?
 private stat_select         ::= stat_if
                             | stat_switch
-stat_if                     ::= 'if' s? '(' s? expression s? ')' s? statement s? ('else' s? statement)?
+stat_if                     ::= 'if' s? ('not' s?)? '(' s? expression s? ')' s? statement s? ('else' s? statement)?
 stat_case_body              ::= block | scope_block*
 stat_switch_body            ::= (stat_case s? stat_case_body)+
 stat_switch                 ::= 'switch' s? '(' s? expression s? ')' s? '{' s? (stat_switch_body s?)* '}'
