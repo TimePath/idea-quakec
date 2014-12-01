@@ -1,6 +1,5 @@
 // http://www.gamers.org/dEngine/quake/spec/quake-spec34/index2.htm
 // Based on: https://github.com/JetBrains/Grammar-Kit/blob/master/testData/generator/ExprParser.bnf
-// TODO: switch/case scope
 // TODO: generate sensible parse tree
 // TODO: macro expansion
 // TODO: string continuation (escape, gap)
@@ -158,12 +157,14 @@ private stat_block          ::= block s?
 stat_expr                   ::= expression? s? ';' s?
 
 stat_label                  ::= ':' identifier s? statement
-                            | ('case' s? expression | 'default') s? ':' s? /* FIXME: (scope_block)* */ stat_jump
+stat_case                   ::= ('case' s? expression | 'default') s? ':'
 stat_jump                   ::= ('continue' (s? identifier)? | 'break' (s? identifier)? | 'goto' (s? identifier) | 'return' (s? expression)?) s? ';' s?
 private stat_select         ::= stat_if
                             | stat_switch
-stat_if                     ::= 'if' s? '(' s? expression s? ')' s? statement ('else' s? statement)?
-stat_switch                 ::= 'switch' s? '(' s? expression s? ')' s? stat_block
+stat_if                     ::= 'if' s? '(' s? expression s? ')' s? statement s? ('else' s? statement)?
+stat_case_body              ::= block | scope_block*
+stat_switch_body            ::= (stat_case s? stat_case_body)+
+stat_switch                 ::= 'switch' s? '(' s? expression s? ')' s? '{' s? (stat_switch_body s?)* '}'
 private stat_while          ::= 'while' s? '(' s? expression s? ')'
 stat_while_do               ::= stat_while s? statement
 stat_do_while               ::= 'do' s? statement s? stat_while s? ';' s?
