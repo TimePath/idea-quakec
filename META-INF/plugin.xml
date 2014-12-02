@@ -36,5 +36,6 @@
                                 language="QuakeC"/>
         <lang.psiStructureViewFactory implementationClass="com.timepath.quakec.QCStructureViewFactory"
                                       language="QuakeC"/>
+        <lang.commenter implementationClass="com.timepath.quakec.QCCommenter" language="QuakeC" />
     </extensions>
 </idea-plugin>
