@@ -7,8 +7,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
 import com.timepath.quakec.psi.QCFile;
-import com.timepath.quakec.psi.QCFunc;
-import com.timepath.quakec.psi.QCVar;
+import com.timepath.quakec.psi.QCMethod;
+import com.timepath.quakec.psi.QCVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,8 +55,8 @@ public class QCStructureViewElement implements StructureViewTreeElement {
     @NotNull
     @Override
     public TreeElement[] getChildren() {
-        QCVar[] vars = PsiTreeUtil.getChildrenOfType(element, QCVar.class);
-        QCFunc[] funcs = PsiTreeUtil.getChildrenOfType(element, QCFunc.class);
+        QCVariable[] vars = PsiTreeUtil.getChildrenOfType(element, QCVariable.class);
+        QCMethod[] funcs = PsiTreeUtil.getChildrenOfType(element, QCMethod.class);
         List<TreeElement> treeElements = new LinkedList<TreeElement>();
         class Child implements StructureViewTreeElement {
 
@@ -119,12 +119,12 @@ public class QCStructureViewElement implements StructureViewTreeElement {
             }
         }
         if (vars != null) {
-            for (final QCVar e : vars) {
+            for (final QCVariable e : vars) {
                 treeElements.add(new Child(e, PlatformIcons.VARIABLE_ICON));
             }
         }
         if (funcs != null) {
-            for (final QCFunc e : funcs) {
+            for (final QCMethod e : funcs) {
                 treeElements.add(new Child(e, PlatformIcons.FUNCTION_ICON));
             }
         }

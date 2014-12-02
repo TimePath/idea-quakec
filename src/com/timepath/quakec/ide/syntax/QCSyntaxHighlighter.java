@@ -61,10 +61,10 @@ public class QCSyntaxHighlighter extends SyntaxHighlighterBase {
     @NotNull
     @Override
     public TextAttributesKey[] getTokenHighlights(IElementType t) {
-        if (t == QCTypes.COMMENT_BLOCK) {
+        if (t == QCTypes.TOKEN_COMMENT_BLOCK) {
             return BLOCK_COMMENT_KEYS;
         }
-        if (t == QCTypes.ID) {
+        if (t == QCTypes.TOKEN_IDENTIFIER) {
             return IDENTIFIER_KEYS;
         }
         if (t == QCTypes.KW_BREAK
@@ -80,19 +80,19 @@ public class QCSyntaxHighlighter extends SyntaxHighlighterBase {
                 || t == QCTypes.KW_WHILE) {
             return KEYWORD_KEYS;
         }
-        if (t == QCTypes.COMMENT_LINE) {
+        if (t == QCTypes.TOKEN_COMMENT_LINE) {
             return LINE_COMMENT_KEYS;
         }
         if (t == QCTypes.MOD_CONST || t == QCTypes.MOD_VAR) {
             return MODIFIER_KEYS;
         }
-        if (t == QCTypes.NUMBER) {
+        if (t == QCTypes.TOKEN_NUMBER) {
             return NUMBER_KEYS;
         }
-        if (t == QCTypes.PREPROCESSOR) {
+        if (t == QCTypes.TOKEN_PREPROCESSOR) {
             return PREPROC_KEYS;
         }
-        if (t == QCTypes.STRING) {
+        if (t == QCTypes.TOKEN_STRING) {
             return STRING_KEYS;
         }
         if (t == QCTypes.T_VOID
