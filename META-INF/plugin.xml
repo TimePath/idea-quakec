@@ -34,5 +34,7 @@
         <colorSettingsPage implementation="com.timepath.quakec.QCColorSettingsPage"/>
         <completion.contributor implementationClass="com.timepath.quakec.QCCompletionContributor"
                                 language="QuakeC"/>
+        <lang.psiStructureViewFactory implementationClass="com.timepath.quakec.QCStructureViewFactory"
+                                      language="QuakeC"/>
     </extensions>
 </idea-plugin>
