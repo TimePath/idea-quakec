@@ -134,7 +134,8 @@ type_args                   ::= '...' | type_arg? (s? ',' s? type_arg)* (s? ',' 
 private type_func           ::= '(' s? type_args s? ')'
 private type                ::= (type_modifier s?)* '.'? type_name
 
-private block               ::= '{' s? scope_block* s? '}'
+block_switch                ::= '{' s? (stat_switch_body s?)* '}'
+block                       ::= '{' s? scope_block* s? '}'
 
 var_entry                   ::= identifier ('[' expression ']')? (s? '=' s? expression)?
 var_list                    ::= var_entry (s? ',' s? var_entry)*
@@ -166,7 +167,7 @@ private stat_select         ::= stat_if
 stat_if                     ::= 'if' s? ('not' s?)? '(' s? expression s? ')' s? statement s? ('else' s? statement)?
 stat_case_body              ::= block | scope_block*
 stat_switch_body            ::= (stat_case s? stat_case_body)+
-stat_switch                 ::= 'switch' s? '(' s? expression s? ')' s? '{' s? (stat_switch_body s?)* '}'
+stat_switch                 ::= 'switch' s? '(' s? expression s? ')' s? block_switch
 private stat_while          ::= 'while' s? '(' s? expression s? ')'
 stat_while_do               ::= stat_while s? statement
 stat_do_while               ::= 'do' s? statement s? stat_while s? ';' s?

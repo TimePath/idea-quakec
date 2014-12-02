@@ -26,16 +26,19 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileTypeFactory implementation="com.timepath.quakec.QCFileTypeFactory"/>
-        <lang.parserDefinition implementationClass="com.timepath.quakec.QCParserDefinition"
-                               language="QuakeC"/>
-        <lang.syntaxHighlighterFactory implementationClass="com.timepath.quakec.QCSyntaxHighlighterFactory"
-                                       key="QuakeC"/>
         <colorSettingsPage implementation="com.timepath.quakec.QCColorSettingsPage"/>
         <completion.contributor implementationClass="com.timepath.quakec.QCCompletionContributor"
                                 language="QuakeC"/>
+        <fileTypeFactory implementation="com.timepath.quakec.QCFileTypeFactory"/>
+
+        <lang.braceMatcher implementationClass="com.timepath.quakec.QCBraceMatcher" language="QuakeC"/>
+        <lang.commenter implementationClass="com.timepath.quakec.QCCommenter" language="QuakeC"/>
+        <lang.foldingBuilder implementationClass="com.timepath.quakec.QCFoldingBuilder" language="QuakeC"/>
+        <lang.parserDefinition implementationClass="com.timepath.quakec.QCParserDefinition"
+                               language="QuakeC"/>
         <lang.psiStructureViewFactory implementationClass="com.timepath.quakec.QCStructureViewFactory"
                                       language="QuakeC"/>
-        <lang.commenter implementationClass="com.timepath.quakec.QCCommenter" language="QuakeC" />
+        <lang.syntaxHighlighterFactory implementationClass="com.timepath.quakec.QCSyntaxHighlighterFactory"
+                                       key="QuakeC"/>
     </extensions>
 </idea-plugin>
