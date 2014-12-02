@@ -30,14 +30,20 @@
         <completion.contributor implementationClass="com.timepath.quakec.ide.QCCompletionContributor"
                                 language="QuakeC"/>
         <fileTypeFactory implementation="com.timepath.quakec.ide.file.QCFileTypeFactory"/>
+        <psi.referenceContributor implementation="com.timepath.quakec.ide.QCReferenceContributor"/>
 
-        <lang.braceMatcher implementationClass="com.timepath.quakec.ide.QCBraceMatcher" language="QuakeC"/>
-        <lang.commenter implementationClass="com.timepath.quakec.ide.QCCommenter" language="QuakeC"/>
-        <lang.foldingBuilder implementationClass="com.timepath.quakec.ide.QCFoldingBuilder" language="QuakeC"/>
+        <lang.braceMatcher implementationClass="com.timepath.quakec.ide.QCBraceMatcher"
+                           language="QuakeC"/>
+        <lang.commenter implementationClass="com.timepath.quakec.ide.QCCommenter"
+                        language="QuakeC"/>
+        <lang.foldingBuilder implementationClass="com.timepath.quakec.ide.QCFoldingBuilder"
+                             language="QuakeC"/>
         <lang.parserDefinition implementationClass="com.timepath.quakec.ide.parser.QCParserDefinition"
                                language="QuakeC"/>
         <lang.psiStructureViewFactory implementationClass="com.timepath.quakec.ide.structure.QCStructureViewFactory"
                                       language="QuakeC"/>
+        <lang.refactoringSupport implementationClass="com.timepath.quakec.ide.QCRefactoringSupportProvider"
+                                 language="QuakeC"/>
         <lang.syntaxHighlighterFactory implementationClass="com.timepath.quakec.ide.syntax.QCSyntaxHighlighterFactory"
                                        key="QuakeC"/>
     </extensions>

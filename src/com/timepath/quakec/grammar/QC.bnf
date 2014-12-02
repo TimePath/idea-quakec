@@ -15,6 +15,8 @@
     psiImplClassSuffix      = "Impl"
     psiPackage              = "com.timepath.quakec.psi"
     psiImplPackage          = "com.timepath.quakec.psi.impl"
+    psiImplUtilClass        = "com.timepath.quakec.psi.impl.QCPsiImplUtil"
+
 
     elementTypeHolderClass  = "com.timepath.quakec.psi.QCTypes"
     elementTypeClass        = "com.timepath.quakec.psi.QCElementType"
@@ -148,15 +150,27 @@ modifier                    ::= 'local' | 'const' | 'noref'
 
 typedef                     ::= 'typedef' s? type s? (type_func s?)? identifier s? ';'
 
-parameter                   ::= type (s? type_func)? (s? identifier (s? '=' s? expression)?)?
+parameter                   ::= type (s? type_func)? (s? identifier (s? '=' s? expression)?)? {
+                                    mixin="com.timepath.quakec.psi.impl.QCNamedElementImpl"
+                                    implements="com.timepath.quakec.psi.QCNamedElement"
+                                    methods = [
+                                        value   = "expression"
+
+                                        getName setName getNameIdentifier
+                                    ]
+                                }
 parameter_list              ::= '...' | parameter? (s? ',' s? parameter)* (s? ',' s? ('...' | parameter))?
 private type_func           ::= '(' s? parameter_list s? ')'
 
 variable_modifiers          ::= (modifier s?)*
 variable                    ::= identifier ('[' expression ']')? (s? '=' s? expression)? {
+                                mixin="com.timepath.quakec.psi.impl.QCNamedElementImpl"
+                                implements="com.timepath.quakec.psi.QCNamedElement"
                                 methods = [
                                     arraySize   = "expression[0]"
                                     value       = "expression[1]"
+
+                                    getName setName getNameIdentifier
                                 ]
                             }
 private var_normal          ::= variable (s? ',' s? variable)*
