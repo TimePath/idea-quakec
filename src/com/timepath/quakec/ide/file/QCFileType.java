@@ -1,6 +1,8 @@
-package com.timepath.quakec;
+package com.timepath.quakec.ide.file;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.timepath.quakec.icons.QCIcons;
+import com.timepath.quakec.ide.QCLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

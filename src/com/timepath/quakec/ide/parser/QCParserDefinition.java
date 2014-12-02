@@ -1,4 +1,4 @@
-package com.timepath.quakec;
+package com.timepath.quakec.ide.parser;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
@@ -13,8 +13,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.timepath.quakec.ide.QCLanguage;
+import com.timepath.quakec.lexer._QCLexer;
 import com.timepath.quakec.parser.QCParser;
-import com.timepath.quakec.flex._QCLexer;
 import com.timepath.quakec.psi.QCFile;
 import com.timepath.quakec.psi.QCTypes;
 import org.jetbrains.annotations.NotNull;

@@ -1,4 +1,4 @@
-package com.timepath.quakec;
+package com.timepath.quakec.ide.syntax;
 
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;

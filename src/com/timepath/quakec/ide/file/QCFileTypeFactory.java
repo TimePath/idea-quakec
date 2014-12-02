@@ -1,8 +1,7 @@
-package com.timepath.quakec;
+package com.timepath.quakec.ide.file;
 
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
-import com.timepath.quakec.QCFileType;
 import org.jetbrains.annotations.NotNull;
 
 /**

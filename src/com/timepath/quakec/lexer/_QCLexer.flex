@@ -1,4 +1,4 @@
-package com.timepath.quakec.flex;
+package com.timepath.quakec.lexer;
 import com.intellij.lexer.*;
 import com.intellij.psi.tree.IElementType;
 import static com.timepath.quakec.psi.QCTypes.*;
@@ -94,6 +94,7 @@ ID=[a-zA-Z_][a-zA-Z_0-9]*
   "goto"               { return KW_GOTO; }
   "return"             { return KW_RETURN; }
   "if"                 { return KW_IF; }
+  "not"                { return KW_NOT; }
   "else"               { return KW_ELSE; }
   "while"              { return KW_WHILE; }
   "do"                 { return KW_DO; }

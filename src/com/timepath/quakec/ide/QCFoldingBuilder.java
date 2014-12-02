@@ -1,4 +1,4 @@
-package com.timepath.quakec;
+package com.timepath.quakec.ide;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;

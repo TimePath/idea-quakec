@@ -26,19 +26,19 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <colorSettingsPage implementation="com.timepath.quakec.QCColorSettingsPage"/>
-        <completion.contributor implementationClass="com.timepath.quakec.QCCompletionContributor"
+        <colorSettingsPage implementation="com.timepath.quakec.ide.QCColorSettingsPage"/>
+        <completion.contributor implementationClass="com.timepath.quakec.ide.QCCompletionContributor"
                                 language="QuakeC"/>
-        <fileTypeFactory implementation="com.timepath.quakec.QCFileTypeFactory"/>
+        <fileTypeFactory implementation="com.timepath.quakec.ide.file.QCFileTypeFactory"/>
 
-        <lang.braceMatcher implementationClass="com.timepath.quakec.QCBraceMatcher" language="QuakeC"/>
-        <lang.commenter implementationClass="com.timepath.quakec.QCCommenter" language="QuakeC"/>
-        <lang.foldingBuilder implementationClass="com.timepath.quakec.QCFoldingBuilder" language="QuakeC"/>
-        <lang.parserDefinition implementationClass="com.timepath.quakec.QCParserDefinition"
+        <lang.braceMatcher implementationClass="com.timepath.quakec.ide.QCBraceMatcher" language="QuakeC"/>
+        <lang.commenter implementationClass="com.timepath.quakec.ide.QCCommenter" language="QuakeC"/>
+        <lang.foldingBuilder implementationClass="com.timepath.quakec.ide.QCFoldingBuilder" language="QuakeC"/>
+        <lang.parserDefinition implementationClass="com.timepath.quakec.ide.parser.QCParserDefinition"
                                language="QuakeC"/>
-        <lang.psiStructureViewFactory implementationClass="com.timepath.quakec.QCStructureViewFactory"
+        <lang.psiStructureViewFactory implementationClass="com.timepath.quakec.ide.structure.QCStructureViewFactory"
                                       language="QuakeC"/>
-        <lang.syntaxHighlighterFactory implementationClass="com.timepath.quakec.QCSyntaxHighlighterFactory"
+        <lang.syntaxHighlighterFactory implementationClass="com.timepath.quakec.ide.syntax.QCSyntaxHighlighterFactory"
                                        key="QuakeC"/>
     </extensions>
 </idea-plugin>

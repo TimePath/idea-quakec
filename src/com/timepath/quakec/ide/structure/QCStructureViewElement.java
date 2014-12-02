@@ -1,4 +1,4 @@
-package com.timepath.quakec;
+package com.timepath.quakec.ide.structure;
 
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;

@@ -1,4 +1,4 @@
-package com.timepath.quakec;
+package com.timepath.quakec.ide.syntax;
 
 import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
@@ -7,12 +7,11 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.psi.tree.IElementType;
-import com.timepath.quakec.flex._QCLexer;
+import com.timepath.quakec.lexer._QCLexer;
 import com.timepath.quakec.psi.QCTypes;
 import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
-import static com.timepath.quakec.psi.QCTypes.*;
 
 /**
  * @author TimePath
@@ -62,45 +61,45 @@ public class QCSyntaxHighlighter extends SyntaxHighlighterBase {
     @NotNull
     @Override
     public TextAttributesKey[] getTokenHighlights(IElementType t) {
-        if (t == COMMENT_BLOCK) {
+        if (t == QCTypes.COMMENT_BLOCK) {
             return BLOCK_COMMENT_KEYS;
         }
-        if (t == ID) {
+        if (t == QCTypes.ID) {
             return IDENTIFIER_KEYS;
         }
-        if (t == KW_BREAK
-                || t == KW_CASE
-                || t == KW_CONTINUE
-                || t == KW_DO
-                || t == KW_ELSE
-                || t == KW_FOR
-                || t == KW_GOTO
-                || t == KW_IF
-                || t == KW_RETURN
-                || t == KW_SWITCH
-                || t == KW_WHILE) {
+        if (t == QCTypes.KW_BREAK
+                || t == QCTypes.KW_CASE
+                || t == QCTypes.KW_CONTINUE
+                || t == QCTypes.KW_DO
+                || t == QCTypes.KW_ELSE
+                || t == QCTypes.KW_FOR
+                || t == QCTypes.KW_GOTO
+                || t == QCTypes.KW_IF
+                || t == QCTypes.KW_RETURN
+                || t == QCTypes.KW_SWITCH
+                || t == QCTypes.KW_WHILE) {
             return KEYWORD_KEYS;
         }
-        if (t == COMMENT_LINE) {
+        if (t == QCTypes.COMMENT_LINE) {
             return LINE_COMMENT_KEYS;
         }
-        if (t == MOD_CONST || t == MOD_VAR) {
+        if (t == QCTypes.MOD_CONST || t == QCTypes.MOD_VAR) {
             return MODIFIER_KEYS;
         }
         if (t == QCTypes.NUMBER) {
             return NUMBER_KEYS;
         }
-        if (t == PREPROCESSOR) {
+        if (t == QCTypes.PREPROCESSOR) {
             return PREPROC_KEYS;
         }
         if (t == QCTypes.STRING) {
             return STRING_KEYS;
         }
-        if (t == T_VOID
-                || t == T_FLOAT
-                || t == T_VECTOR
-                || t == T_STRING
-                || t == T_ENTITY
+        if (t == QCTypes.T_VOID
+                || t == QCTypes.T_FLOAT
+                || t == QCTypes.T_VECTOR
+                || t == QCTypes.T_STRING
+                || t == QCTypes.T_ENTITY
                 ) {
             return TYPE_KEYS;
         }
