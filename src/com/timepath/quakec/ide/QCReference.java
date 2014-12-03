@@ -6,7 +6,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.timepath.quakec.icons.QCIcons;
-import com.timepath.quakec.psi.QCNamedElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,9 +27,9 @@ public class QCReference extends PsiReferenceBase<PsiElement> implements PsiPoly
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
         Project project = myElement.getProject();
-        final List<QCNamedElement> elements = QCUtil.find(project, key, QCNamedElement.class);
+        final List<PsiNamedElement> elements = QCUtil.find(project, key, PsiNamedElement.class);
         List<ResolveResult> results = new ArrayList<ResolveResult>();
-        for (QCNamedElement named : elements) {
+        for (PsiNamedElement named : elements) {
             results.add(new PsiElementResolveResult(named));
         }
         return results.toArray(new ResolveResult[results.size()]);
@@ -47,9 +46,9 @@ public class QCReference extends PsiReferenceBase<PsiElement> implements PsiPoly
     @Override
     public Object[] getVariants() {
         Project project = myElement.getProject();
-        List<QCNamedElement> elements = QCUtil.find(project, null, QCNamedElement.class);
+        List<PsiNamedElement> elements = QCUtil.find(project, null, PsiNamedElement.class);
         List<LookupElement> variants = new ArrayList<LookupElement>();
-        for (final QCNamedElement named : elements) {
+        for (final PsiNamedElement named : elements) {
             if (named.getName() != null && named.getName().length() > 0) {
                 variants.add(LookupElementBuilder.create(named).
                                 withIcon(QCIcons.FILE).

@@ -3,7 +3,7 @@ package com.timepath.quakec.ide.structure;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
 import com.timepath.quakec.psi.QCFile;
@@ -60,10 +60,10 @@ public class QCStructureViewElement implements StructureViewTreeElement {
         List<TreeElement> treeElements = new LinkedList<TreeElement>();
         class Child implements StructureViewTreeElement {
 
-            private final PsiElement e;
+            private final PsiNamedElement e;
             private final Icon i;
 
-            Child(PsiElement element, Icon icon) {
+            Child(PsiNamedElement element, Icon icon) {
                 this.e = element;
                 this.i = icon;
             }
@@ -95,7 +95,7 @@ public class QCStructureViewElement implements StructureViewTreeElement {
                     @Nullable
                     @Override
                     public String getPresentableText() {
-                        return e.getText();
+                        return e.getName();
                     }
 
                     @Nullable

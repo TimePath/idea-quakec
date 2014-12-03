@@ -119,7 +119,7 @@
 
 root                        ::= (root_item)*
 private root_item           ::= !(<<eof>>) scope_root {pin=1}
-private scope_common        ::= variable_declaration s? ';' | typedef | s | ';'
+private scope_common        ::= variable_declaration (s? ';') | typedef | s | ';'
 private scope_root          ::= method | scope_common
 private scope_block         ::= statement | scope_common
 
@@ -134,7 +134,14 @@ private comment_line        ::= token_comment_line
 private comment_block       ::= token_comment_block
 private number              ::= token_number
 private string              ::= token_string
-identifier                  ::= token_identifier
+identifier                  ::= token_identifier {
+                                    implements="com.intellij.psi.PsiNameIdentifierOwner"
+                                    methods = [
+                                        nameIdentifier  = "token_identifier"
+
+                                        getName setName
+                                    ]
+                                }
 
 // literals
 
@@ -148,38 +155,49 @@ modifier                    ::= 'local' | 'const' | 'noref'
 
 // declarations
 
-typedef                     ::= 'typedef' s? type s? (type_func s?)? identifier s? ';'
-
-parameter                   ::= type (s? type_func)? (s? identifier (s? '=' s? expression)?)? {
-                                    mixin="com.timepath.quakec.psi.impl.QCNamedElementImpl"
-                                    implements="com.timepath.quakec.psi.QCNamedElement"
+typedef                     ::= 'typedef' s? type s? (parameter_list s?)? identifier (s? ';') {
+                                    implements="com.intellij.psi.PsiNamedElement"
                                     methods = [
-                                        value   = "expression"
+                                        nameIdentifier  = "identifier"
 
-                                        getName setName getNameIdentifier
+                                        getName setName
                                     ]
                                 }
-parameter_list              ::= '...' | parameter? (s? ',' s? parameter)* (s? ',' s? ('...' | parameter))?
-private type_func           ::= '(' s? parameter_list s? ')'
+
+parameter                   ::= type (s? parameter_list)? (s? identifier (s? '=' s? expression)?)? {
+                                    implements="com.intellij.psi.PsiNamedElement"
+                                    methods = [
+                                        nameIdentifier  = "identifier"
+
+                                        getName setName
+                                    ]
+                                }
+private parameter_list_     ::= '...' | parameter? (s? ',' s? parameter)* (s? ',' s? ('...' | parameter))?
+parameter_list              ::= '(' s? parameter_list_ s? ')'
 
 variable_modifiers          ::= (modifier s?)*
-variable                    ::= identifier ('[' expression ']')? (s? '=' s? expression)? {
-                                mixin="com.timepath.quakec.psi.impl.QCNamedElementImpl"
-                                implements="com.timepath.quakec.psi.QCNamedElement"
-                                methods = [
-                                    arraySize   = "expression[0]"
-                                    value       = "expression[1]"
+variable                    ::= identifier ('[' expression ']')? (s? '=' s? expression)?  {
+                                    implements="com.intellij.psi.PsiNamedElement"
+                                    methods = [
+                                        nameIdentifier  = "identifier"
 
-                                    getName setName getNameIdentifier
-                                ]
-                            }
+                                        getName setName
+                                    ]
+                                }
 private var_normal          ::= variable (s? ',' s? variable)*
-private var_func            ::= type_func s? identifier (s? '=' s? identifier)?
+private var_func            ::= parameter_list s? identifier (s? '=' s? identifier)?
 variable_declaration        ::= ('var' s?)? variable_modifiers type s? (var_normal | var_func)
 
-private func_old            ::= type s? type_func s? identifier s? (';' | '=' s? (builtin_method s? ';' | block (s? ';')?))?
-private func_new            ::= type s? identifier s? type_func s? ('=' s? builtin_method | block | ';')
-method                      ::= var_func | func_old | func_new
+private func_old            ::= type s? parameter_list s? identifier s? (';' | '=' s? (builtin_method (s? ';') | block (s? ';')?))?
+private func_new            ::= type s? identifier s? parameter_list s? ('=' s? builtin_method | block | ';')
+method                      ::= var_func | func_old | func_new  {
+                                    implements="com.intellij.psi.PsiNamedElement"
+                                    methods = [
+                                        nameIdentifier  = "identifier[first]"
+
+                                        getName setName
+                                    ]
+                                }
 
 // statements
 
@@ -191,11 +209,11 @@ statement                   ::= label_statement
                             | expr_statement
 
 private block_statement     ::= block s?
-expr_statement              ::= expression? s? ';' s?
+expr_statement              ::= expression? (s? ';')
 
 label_statement             ::= ':' identifier s? statement
 case_statement              ::= ('case' s? expression | 'default') s? ':'
-jump_statement              ::= ('continue' (s? identifier)? | 'break' (s? identifier)? | 'goto' (s? identifier) | 'return' (s? expression)?) s? ';' s?
+jump_statement              ::= ('continue' (s? identifier)? | 'break' (s? identifier)? | 'goto' (s? identifier) | 'return' (s? expression)?) (s? ';')
 private select_statement    ::= if_statement
                             | switch_statement
 if_statement                ::= 'if' s? ('not' s?)? '(' s? expression s? ')' s? statement s? ('else' s? statement)?
@@ -204,12 +222,12 @@ switch_body_statement       ::= (case_statement s? case_body_statement)+
 switch_statement            ::= 'switch' s? '(' s? expression s? ')' s? block_switch {methods=[testE="expression"]}
 private while_statement     ::= 'while' s? '(' s? expression s? ')'
 while_do_statement          ::= while_statement s? statement {methods=[test="expression"]}
-do_while_statement          ::= 'do' s? statement s? while_statement s? ';' s? {methods=[test="expression"]}
+do_while_statement          ::= 'do' s? statement s? while_statement (s? ';') s? {methods=[test="expression"]}
 private for_statement_expr  ::= comma_expression | expression
 for_statement_before        ::= (variable_declaration | for_statement_expr)?
 for_statement_test          ::= for_statement_expr?
 for_statement_continue      ::= for_statement_expr?
-for_statement               ::= 'for' s? '(' s? for_statement_before s? ';' s? for_statement_test s? ';' s? for_statement_continue s? ')' s? statement {
+for_statement               ::= 'for' s? '(' s? (for_statement_before (s? ';' s?) for_statement_test (s? ';' s?) for_statement_continue) s? ')' s? statement {
                                 methods = [
                                     before  = "for_statement_before"
                                     test    = "for_statement_test"
