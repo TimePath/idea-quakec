@@ -12,5 +12,7 @@ public class QCFileTypeFactory extends FileTypeFactory {
     public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
         fileTypeConsumer.consume(QCFileType.INSTANCE, "qc");
         fileTypeConsumer.consume(QCFileType.INSTANCE, "qh");
+        fileTypeConsumer.consume(QCFileType.INSTANCE, "c");
+        fileTypeConsumer.consume(QCFileType.INSTANCE, "h");
     }
 }
