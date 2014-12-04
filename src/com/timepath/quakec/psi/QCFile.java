@@ -3,8 +3,8 @@ package com.timepath.quakec.psi;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
-import com.timepath.quakec.ide.file.QCFileType;
 import com.timepath.quakec.ide.QCLanguage;
+import com.timepath.quakec.ide.file.QCFileType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

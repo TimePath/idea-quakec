@@ -6,6 +6,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
+import com.intellij.util.containers.ContainerUtil;
 import com.timepath.quakec.psi.QCFile;
 import com.timepath.quakec.psi.QCMethod;
 import com.timepath.quakec.psi.QCVariable;
@@ -13,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -55,9 +55,9 @@ public class QCStructureViewElement implements StructureViewTreeElement {
     @NotNull
     @Override
     public TreeElement[] getChildren() {
-        QCVariable[] vars = PsiTreeUtil.getChildrenOfType(element, QCVariable.class);
-        QCMethod[] funcs = PsiTreeUtil.getChildrenOfType(element, QCMethod.class);
-        List<TreeElement> treeElements = new LinkedList<TreeElement>();
+        List<QCVariable> vars = PsiTreeUtil.getChildrenOfTypeAsList(element, QCVariable.class);
+        List<QCMethod> funcs = PsiTreeUtil.getChildrenOfTypeAsList(element, QCMethod.class);
+        List<TreeElement> treeElements = ContainerUtil.newArrayListWithCapacity(vars.size() + funcs.size());
         class Child implements StructureViewTreeElement {
 
             private final PsiNamedElement e;

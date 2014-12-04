@@ -1,13 +1,13 @@
 package com.timepath.quakec.ide.syntax;
 
-import com.intellij.lexer.FlexAdapter;
+import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.psi.tree.IElementType;
-import com.timepath.quakec.lexer._QCLexer;
+import com.timepath.quakec.ide.QCLanguage;
 import com.timepath.quakec.psi.QCTypes;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +55,7 @@ public class QCSyntaxHighlighter extends SyntaxHighlighterBase {
     @NotNull
     @Override
     public Lexer getHighlightingLexer() {
-        return new FlexAdapter(new _QCLexer());
+        return LanguageParserDefinitions.INSTANCE.forLanguage(QCLanguage.INSTANCE).createLexer(null);
     }
 
     @NotNull
@@ -69,6 +69,7 @@ public class QCSyntaxHighlighter extends SyntaxHighlighterBase {
         }
         if (t == QCTypes.KW_BREAK
                 || t == QCTypes.KW_CASE
+                || t == QCTypes.KW_DEFAULT
                 || t == QCTypes.KW_CONTINUE
                 || t == QCTypes.KW_DO
                 || t == QCTypes.KW_ELSE
@@ -77,7 +78,8 @@ public class QCSyntaxHighlighter extends SyntaxHighlighterBase {
                 || t == QCTypes.KW_IF
                 || t == QCTypes.KW_RETURN
                 || t == QCTypes.KW_SWITCH
-                || t == QCTypes.KW_WHILE) {
+                || t == QCTypes.KW_WHILE
+                || t == QCTypes.KW_TYPEDEF) {
             return KEYWORD_KEYS;
         }
         if (t == QCTypes.TOKEN_COMMENT_LINE) {

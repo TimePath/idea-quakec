@@ -22,14 +22,13 @@ public class QCFoldingBuilder implements FoldingBuilder {
     public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
         List<FoldingDescriptor> list = new ArrayList<FoldingDescriptor>();
         buildFolding(node, list);
-        FoldingDescriptor[] descriptors = new FoldingDescriptor[list.size()];
-        return list.toArray(descriptors);
+        return list.toArray(new FoldingDescriptor[list.size()]);
     }
 
     private static void buildFolding(ASTNode node, List<FoldingDescriptor> list) {
-        final IElementType elementType = node.getElementType();
+        IElementType elementType = node.getElementType();
         if (elementType == QCTypes.BLOCK || elementType == QCTypes.BLOCK_SWITCH) {
-            final TextRange range = node.getTextRange();
+            TextRange range = node.getTextRange();
             list.add(new FoldingDescriptor(node, range));
         }
         for (ASTNode child : node.getChildren(null)) {

@@ -1,14 +1,13 @@
 package com.timepath.quakec.ide;
 
 import com.intellij.lang.HelpID;
+import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
-import com.intellij.lexer.FlexAdapter;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.TokenSet;
-import com.timepath.quakec.lexer._QCLexer;
 import com.timepath.quakec.psi.QCMethod;
 import com.timepath.quakec.psi.QCParameter;
 import com.timepath.quakec.psi.QCTypes;
@@ -24,10 +23,10 @@ public class QCFindUsagesProvider implements FindUsagesProvider {
     @Nullable
     @Override
     public WordsScanner getWordsScanner() {
-        return new DefaultWordsScanner(new FlexAdapter(new _QCLexer()),
+        return new DefaultWordsScanner(LanguageParserDefinitions.INSTANCE.forLanguage(QCLanguage.INSTANCE).createLexer(null),
                 TokenSet.create(QCTypes.IDENTIFIER),
                 TokenSet.create(QCTypes.COMMENT),
-                TokenSet.create(QCTypes.IDENTIFIER)
+                TokenSet.create(QCTypes.LITERAL)
         );
     }
 

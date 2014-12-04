@@ -30,7 +30,6 @@
         <completion.contributor implementationClass="com.timepath.quakec.ide.QCCompletionContributor"
                                 language="QuakeC"/>
         <fileTypeFactory implementation="com.timepath.quakec.ide.file.QCFileTypeFactory"/>
-        <psi.referenceContributor implementation="com.timepath.quakec.ide.QCReferenceContributor"/>
 
         <lang.braceMatcher implementationClass="com.timepath.quakec.ide.QCBraceMatcher"
                            language="QuakeC"/>

@@ -1,7 +1,6 @@
 package com.timepath.quakec.ide.parser;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.FlexAdapter;
@@ -26,13 +25,24 @@ import org.jetbrains.annotations.NotNull;
 public class QCParserDefinition implements ParserDefinition {
     public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
     public static final TokenSet COMMENTS = TokenSet.create(QCTypes.COMMENT);
+    public static final TokenSet STRINGS = TokenSet.create(QCTypes.TOKEN_STRING);
 
-    public static final IFileElementType FILE = new IFileElementType(Language.findInstance(QCLanguage.class));
+    public static final IFileElementType FILE = new IFileElementType(QCLanguage.INSTANCE);
 
     @NotNull
     @Override
     public Lexer createLexer(Project project) {
         return new FlexAdapter(new _QCLexer());
+    }
+
+    @NotNull
+    public PsiParser createParser(final Project project) {
+        return new QCParser();
+    }
+
+    @Override
+    public IFileElementType getFileNodeType() {
+        return FILE;
     }
 
     @NotNull
@@ -47,17 +57,12 @@ public class QCParserDefinition implements ParserDefinition {
 
     @NotNull
     public TokenSet getStringLiteralElements() {
-        return TokenSet.EMPTY;
+        return STRINGS;
     }
 
     @NotNull
-    public PsiParser createParser(final Project project) {
-        return new QCParser();
-    }
-
-    @Override
-    public IFileElementType getFileNodeType() {
-        return FILE;
+    public PsiElement createElement(ASTNode node) {
+        return QCTypes.Factory.createElement(node);
     }
 
     public PsiFile createFile(FileViewProvider viewProvider) {
@@ -68,8 +73,4 @@ public class QCParserDefinition implements ParserDefinition {
         return SpaceRequirements.MAY;
     }
 
-    @NotNull
-    public PsiElement createElement(ASTNode node) {
-        return QCTypes.Factory.createElement(node);
-    }
 }

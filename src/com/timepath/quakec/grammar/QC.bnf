@@ -100,8 +100,8 @@
         KW_FOR='for'
         KW_SWITCH='switch'
         KW_CASE='case'
-        KS_DEFAULT='default'
-        KS_TYPEDEF='typedef'
+        KW_DEFAULT='default'
+        KW_TYPEDEF='typedef'
 
         token_space         = 'regexp:\s+'
         token_preprocessor  = 'regexp:#\s*(define|include|(un|ifn?)def|endif|el(if|se)|if|warning|error|pragma)(.*\\\s*\n)*.*'

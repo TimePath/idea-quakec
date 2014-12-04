@@ -1,4 +1,4 @@
-package com.timepath.quakec.ide;
+package com.timepath.quakec.ide.reference;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -48,9 +48,6 @@ public class QCReference extends PsiReferenceBase<PsiElement> implements PsiPoly
     }
 
     /**
-     *
-     * @param containingFile
-     * @param processor
      * @return true if processor is still accepting
      */
     private boolean findFile(final PsiFile containingFile, Processor<QCIdentifier> processor) {

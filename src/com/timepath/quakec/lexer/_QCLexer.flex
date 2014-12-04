@@ -101,8 +101,8 @@ TOKEN_IDENTIFIER=[a-zA-Z_][a-zA-Z_0-9]*
   "for"                      { return KW_FOR; }
   "switch"                   { return KW_SWITCH; }
   "case"                     { return KW_CASE; }
-  "default"                  { return KS_DEFAULT; }
-  "typedef"                  { return KS_TYPEDEF; }
+  "default"                  { return KW_DEFAULT; }
+  "typedef"                  { return KW_TYPEDEF; }
 
   {TOKEN_SPACE}              { return TOKEN_SPACE; }
   {TOKEN_PREPROCESSOR}       { return TOKEN_PREPROCESSOR; }
