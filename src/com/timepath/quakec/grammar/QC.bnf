@@ -138,8 +138,9 @@ identifier                  ::= token_identifier {
                                     implements="com.intellij.psi.PsiNameIdentifierOwner"
                                     methods = [
                                         nameIdentifier  = "token_identifier"
-
                                         getName setName
+
+                                        getReference
                                     ]
                                 }
 
@@ -176,9 +177,11 @@ private parameter_list_     ::= '...' | parameter? (s? ',' s? parameter)* (s? ',
 parameter_list              ::= '(' s? parameter_list_ s? ')'
 
 variable_modifiers          ::= (modifier s?)*
-variable                    ::= identifier ('[' expression ']')? (s? '=' s? expression)?  {
+variable_arraysize          ::= '[' expression ']'
+variable                    ::= identifier variable_arraysize? (s? '=' s? expression)?  {
                                     implements="com.intellij.psi.PsiNamedElement"
                                     methods = [
+                                        value           = "expression"
                                         nameIdentifier  = "identifier"
 
                                         getName setName

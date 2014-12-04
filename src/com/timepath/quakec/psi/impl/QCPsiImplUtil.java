@@ -1,33 +1,40 @@
 package com.timepath.quakec.psi.impl;
 
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
+import com.timepath.quakec.ide.QCReference;
 import com.timepath.quakec.psi.*;
+import org.jetbrains.annotations.NotNull;
+
+import static com.timepath.quakec.psi.QCElementFactory.createIdentifier;
 
 /**
  * @author TimePath
  */
 public class QCPsiImplUtil {
 
-    private static PsiElement createIdentifierNode(PsiElement element, String newName) {
-        QCVariableDeclaration variable = QCElementFactory.create(element.getProject(), "void " + newName + ";");
-        return variable.getVariableList().get(0).getNameIdentifier();
-    }
-
+    @NotNull
     public static String getName(QCIdentifier element) {
         return element.getNameIdentifier().getText();
     }
 
     public static PsiElement setName(QCIdentifier element, String newName) {
-        element.replace(createIdentifierNode(element, newName));
+        element.replace(createIdentifier(element, newName));
         return element;
     }
 
+    public static PsiReference getReference(QCIdentifier self) {
+        return new QCReference(self, TextRange.allOf(self.getName()));
+    }
+
+    @NotNull
     public static String getName(QCTypedef element) {
         return element.getNameIdentifier().getText();
     }
 
     public static PsiElement setName(QCTypedef element, String newName) {
-        element.getNameIdentifier().replace(createIdentifierNode(element, newName));
+        element.getNameIdentifier().replace(createIdentifier(element, newName));
         return element;
     }
 
@@ -39,26 +46,28 @@ public class QCPsiImplUtil {
     public static PsiElement setName(QCParameter element, String newName) {
         final QCIdentifier nameIdentifier = element.getNameIdentifier();
         if (nameIdentifier != null) {
-            nameIdentifier.replace(createIdentifierNode(element, newName));
+            nameIdentifier.replace(createIdentifier(element, newName));
         }
         return element;
     }
 
+    @NotNull
     public static String getName(QCVariable element) {
         return element.getNameIdentifier().getText();
     }
 
     public static PsiElement setName(QCVariable element, String newName) {
-        element.getNameIdentifier().replace(createIdentifierNode(element, newName));
+        element.getNameIdentifier().replace(createIdentifier(element, newName));
         return element;
     }
 
+    @NotNull
     public static String getName(QCMethod element) {
         return element.getNameIdentifier().getText();
     }
 
     public static PsiElement setName(QCMethod element, String newName) {
-        element.getNameIdentifier().replace(createIdentifierNode(element, newName));
+        element.getNameIdentifier().replace(createIdentifier(element, newName));
         return element;
     }
 
