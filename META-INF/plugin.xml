@@ -47,5 +47,8 @@
                                  language="QuakeC"/>
         <lang.syntaxHighlighterFactory implementationClass="com.timepath.quakec.ide.syntax.QCSyntaxHighlighterFactory"
                                        key="QuakeC"/>
+
+        <localInspection language="QuakeC" implementationClass="com.timepath.quakec.inspection.UnusedVariableInspection"
+                         displayName="Unused variable" groupName="Quake Lint" enabledByDefault="true"/>
     </extensions>
 </idea-plugin>
