@@ -1,15 +1,15 @@
 package com.timepath.quakec.ide.structure;
 
 import com.intellij.ide.structureView.StructureViewTreeElement;
+import com.intellij.ide.util.treeView.smartTree.SortableTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
-import com.timepath.quakec.psi.QCFile;
-import com.timepath.quakec.psi.QCMethod;
-import com.timepath.quakec.psi.QCVariable;
+import com.timepath.quakec.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,72 +20,80 @@ import java.util.List;
  * @author TimePath
  */
 public class QCStructureViewElement implements StructureViewTreeElement {
-    private QCFile element;
+    private QCFile root;
 
-    public QCStructureViewElement(QCFile element) {
-        this.element = element;
+    public QCStructureViewElement(QCFile root) {
+        this.root = root;
     }
 
     @Override
     public Object getValue() {
-        return element;
+        return root;
     }
 
     @Override
     public void navigate(boolean requestFocus) {
-        element.navigate(requestFocus);
+        root.navigate(requestFocus);
     }
 
     @Override
     public boolean canNavigate() {
-        return element.canNavigate();
+        return root.canNavigate();
     }
 
     @Override
     public boolean canNavigateToSource() {
-        return element.canNavigateToSource();
+        return root.canNavigateToSource();
     }
 
     @NotNull
     @Override
     public ItemPresentation getPresentation() {
-        return element.getPresentation();
+        return root.getPresentation();
     }
 
     @NotNull
     @Override
     public TreeElement[] getChildren() {
-        List<QCVariable> vars = PsiTreeUtil.getChildrenOfTypeAsList(element, QCVariable.class);
-        List<QCMethod> funcs = PsiTreeUtil.getChildrenOfTypeAsList(element, QCMethod.class);
-        List<TreeElement> treeElements = ContainerUtil.newArrayListWithCapacity(vars.size() + funcs.size());
-        class Child implements StructureViewTreeElement {
+        class Child implements StructureViewTreeElement, SortableTreeElement {
 
-            private final PsiNamedElement e;
+            private final
+            @NotNull
+            PsiNamedElement element;
             private final Icon i;
 
-            Child(PsiNamedElement element, Icon icon) {
-                this.e = element;
+            Child(@NotNull PsiNamedElement element, Icon icon) {
+                this.element = element;
                 this.i = icon;
             }
 
             @Override
-            public void navigate(boolean b) {
+            public Object getValue() {
+                return element;
+            }
 
+            @Override
+            public void navigate(boolean requestFocus) {
+                if (element instanceof NavigationItem) {
+                    ((NavigationItem) element).navigate(requestFocus);
+                }
             }
 
             @Override
             public boolean canNavigate() {
-                return false;
+                return element instanceof NavigationItem && ((NavigationItem) element).canNavigate();
             }
 
             @Override
             public boolean canNavigateToSource() {
-                return false;
+                return element instanceof NavigationItem && ((NavigationItem) element).canNavigateToSource();
             }
 
+            @NotNull
             @Override
-            public Object getValue() {
-                return e;
+            public String getAlphaSortKey() {
+                String name = element.getName();
+                return name != null ? name : "";
             }
 
             @NotNull
@@ -95,7 +103,7 @@ public class QCStructureViewElement implements StructureViewTreeElement {
                     @Nullable
                     @Override
                     public String getPresentableText() {
-                        return e.getName();
+                        return element.getName();
                     }
 
                     @Nullable
@@ -118,15 +126,27 @@ public class QCStructureViewElement implements StructureViewTreeElement {
                 return EMPTY_ARRAY;
             }
         }
-        if (vars != null) {
-            for (final QCVariable e : vars) {
-                treeElements.add(new Child(e, PlatformIcons.VARIABLE_ICON));
+        List<TreeElement> treeElements = ContainerUtil.newArrayList();
+        List<QCTypedef> types = PsiTreeUtil.getChildrenOfTypeAsList(root, QCTypedef.class);
+        for (QCTypedef e : types) {
+            treeElements.add(new Child(e, PlatformIcons.INTERFACE_ICON));
+        }
+        List<QCVariableDeclaration> vars = PsiTreeUtil.getChildrenOfTypeAsList(root, QCVariableDeclaration.class);
+        for (QCVariableDeclaration declaration : vars) {
+            Icon icon = declaration.getType().getText().startsWith(".")
+                    ? PlatformIcons.FIELD_ICON
+                    : PlatformIcons.VARIABLE_ICON;
+            for (QCVariable variable : PsiTreeUtil.getChildrenOfTypeAsList(declaration, QCVariable.class)) {
+                treeElements.add(new Child(variable, icon));
             }
         }
-        if (funcs != null) {
-            for (final QCMethod e : funcs) {
-                treeElements.add(new Child(e, PlatformIcons.FUNCTION_ICON));
-            }
+        List<QCMethod> funcs = PsiTreeUtil.getChildrenOfTypeAsList(root, QCMethod.class);
+        for (QCMethod declaration : funcs) {
+            QCType type = declaration.getType();
+            Icon icon = type != null && type.getText().startsWith(".")
+                    ? PlatformIcons.METHOD_ICON
+                    : PlatformIcons.FUNCTION_ICON;
+            treeElements.add(new Child(declaration, icon));
         }
         return treeElements.toArray(new TreeElement[treeElements.size()]);
     }
