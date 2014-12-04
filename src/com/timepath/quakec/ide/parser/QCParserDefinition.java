@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class QCParserDefinition implements ParserDefinition {
     public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
-    public static final TokenSet COMMENTS = TokenSet.create(QCTypes.COMMENT);
+    public static final TokenSet COMMENTS = TokenSet.create(QCTypes.TOKEN_COMMENT_LINE, QCTypes.TOKEN_COMMENT_BLOCK);
     public static final TokenSet STRINGS = TokenSet.create(QCTypes.TOKEN_STRING);
 
     public static final IFileElementType FILE = new IFileElementType(QCLanguage.INSTANCE);

@@ -1,18 +1,16 @@
 package com.timepath.quakec.ide.syntax;
 
+import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author TimePath
  */
-public class QCSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
+public class QCSyntaxHighlighterFactory extends SingleLazyInstanceSyntaxHighlighterFactory {
     @NotNull
     @Override
-    public SyntaxHighlighter getSyntaxHighlighter(Project project, VirtualFile virtualFile) {
+    public SyntaxHighlighter createHighlighter() {
         return new QCSyntaxHighlighter();
     }
 }
