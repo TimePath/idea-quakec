@@ -1,6 +1,5 @@
 package com.timepath.quakec.psi.impl;
 
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.timepath.quakec.ide.reference.QCReference;
@@ -25,7 +24,7 @@ public class QCPsiImplUtil {
     }
 
     public static PsiReference getReference(QCIdentifier self) {
-        return new QCReference(self, TextRange.allOf(self.getName()));
+        return QCReference.create(self);
     }
 
     @NotNull

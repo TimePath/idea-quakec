@@ -16,7 +16,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.timepath.quakec.ide.file.QCFileType;
-import com.timepath.quakec.psi.QCIdentifier;
+import com.timepath.quakec.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,64 +28,115 @@ import java.util.List;
  */
 public class QCReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference {
 
-    private String key;
-
-    public QCReference(@NotNull PsiElement element, TextRange textRange) {
-        super(element, textRange);
-        key = element.getText().substring(textRange.getStartOffset(), textRange.getEndOffset());
+    public static PsiReferenceBase<? extends PsiElement> create(@NotNull QCIdentifier identifier) {
+        if (isDeclaration(identifier)) {
+            return null;
+        }
+        return new QCReference(identifier);
     }
 
-    private void findAll(GlobalSearchScope scope, Processor<QCIdentifier> processor) {
+    private String key;
+
+    private QCReference(@NotNull PsiElement element) {
+        super(element, TextRange.allOf(element.getText()));
+        key = element.getText();
+    }
+
+    private static boolean isDeclaration(@NotNull QCIdentifier identifier) {
+        PsiElement parent = identifier.getParent();
+        return parent instanceof QCMethod
+                || parent instanceof QCParameter
+                || parent instanceof QCVariable;
+    }
+
+    private boolean isScopeElement(@NotNull PsiElement element) {
+        return isBlockElement(element)
+                || element instanceof QCMethod
+                || element instanceof QCFile;
+    }
+
+    private boolean isBlockElement(PsiElement element) {
+        return element instanceof QCBlock
+                || element instanceof QCBlockSwitch;
+    }
+
+    private List<PsiElement> getScopes() {
+        List<PsiElement> scopes = ContainerUtil.newLinkedList();
+        PsiElement e = getElement();
+        while ((e = e.getParent()) != null) {
+            if (isScopeElement(e)) {
+                scopes.add(e);
+            }
+        }
         Project project = getElement().getProject();
         PsiManager psiManager = PsiManager.getInstance(project);
         FileBasedIndex fileBasedIndex = FileBasedIndex.getInstance();
         Collection<VirtualFile> files = fileBasedIndex
-                .getContainingFiles(FileTypeIndex.NAME, QCFileType.INSTANCE, scope);
+                .getContainingFiles(FileTypeIndex.NAME, QCFileType.INSTANCE, GlobalSearchScope.projectScope(project));
         for (VirtualFile v : files) {
-            PsiFile file = psiManager.findFile(v);
-            if (!findFile(file, processor)) break;
+            scopes.add(psiManager.findFile(v));
+        }
+        return scopes;
+    }
+
+    private void find(Processor<QCIdentifier> processor) {
+        List<PsiElement> scopes = getScopes();
+        List<QCIdentifier> all = ContainerUtil.newArrayList();
+        for (PsiElement scope : scopes) {
+            List<QCIdentifier> identifiers = findScope(scope);
+            all.addAll(identifiers);
+            if (!ContainerUtil.process(identifiers, processor)) {
+                // No longer processing
+                break;
+            }
         }
     }
 
-    /**
-     * @return true if processor is still accepting
-     */
-    private boolean findFile(final PsiFile containingFile, Processor<QCIdentifier> processor) {
-        List<QCIdentifier> identifiers = CachedValuesManager.getCachedValue(
-                containingFile, new CachedValueProvider<List<QCIdentifier>>() {
-                    @Nullable
-                    @Override
-                    public Result<List<QCIdentifier>> compute() {
-                        return CachedValueProvider.Result.create(computeDefinitions(QCIdentifier.class), containingFile);
-                    }
+    private List<QCIdentifier> findScope(final PsiElement parent) {
+        return CachedValuesManager.getCachedValue(parent, new CachedValueProvider<List<QCIdentifier>>() {
+            @Nullable
+            @Override
+            public Result<List<QCIdentifier>> compute() {
+                return Result.create(computeImpl(), parent);
+            }
 
-                    public <T> List<T> computeDefinitions(final Class<T> clazz) {
-                        final List<T> result = ContainerUtil.newArrayList();
-                        containingFile.acceptChildren(new PsiRecursiveElementWalkingVisitor() {
-                            @SuppressWarnings("unchecked")
-                            @Override
-                            public void visitElement(PsiElement element) {
-                                if (clazz.isInstance(element)) {
-                                    result.add((T) element);
-                                }
-                                super.visitElement(element);
+            private List<QCIdentifier> computeImpl() {
+                final List<QCIdentifier> result = ContainerUtil.newArrayList();
+                parent.acceptChildren(new PsiElementVisitor() {
+                    @Override
+                    public void visitElement(PsiElement element) {
+                        super.visitElement(element);
+                        if (element instanceof QCIdentifier) {
+                            QCIdentifier identifier = (QCIdentifier) element;
+                            if (isDeclaration(identifier)) {
+                                result.add(identifier);
                             }
-                        });
-                        return result;
+                        }
+                        if (!isBlockElement(element)) {
+                            element.acceptChildren(this);
+                        }
                     }
                 });
-        return ContainerUtil.process(identifiers, processor);
+                return result;
+            }
+        });
     }
 
     @NotNull
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
-        QCIdentifier[] elements = getVariants();
+        QCIdentifier[] elements = resolveAll();
         ResolveResult[] results = new ResolveResult[elements.length];
         for (int i = 0; i < results.length; i++) {
             results[i] = new PsiElementResolveResult(elements[i]);
         }
         return results;
+    }
+
+    private QCIdentifier[] resolveAll() {
+        CollectProcessor<QCIdentifier> processor = new CollectProcessor<>();
+        find(processor);
+        return ArrayUtil.toObjectArray(processor.getResults(), QCIdentifier.class);
     }
 
     @Nullable
@@ -94,19 +145,44 @@ public class QCReference extends PsiReferenceBase<PsiElement> implements PsiPoly
         FindProcessor<QCIdentifier> processor = new FindProcessor<QCIdentifier>() {
             @Override
             protected boolean accept(QCIdentifier o) {
-                return Comparing.equal(o.getName(), key);
+                if (o == null) return false;
+                String name = o.getName();
+                final boolean[] isVector = {false};
+                o.getParent().accept(new QCVisitor() {
+                    @Override
+                    public void visitType(@NotNull QCType o) {
+                        isVector[0] = "vector".equals(o.getText());
+                    }
+
+                    @Override
+                    public void visitParameter(@NotNull QCParameter o) {
+                        o.getType().accept(this);
+                    }
+
+                    @Override
+                    public void visitVariable(@NotNull QCVariable o) {
+                        o.getParent().accept(this);
+                    }
+
+                    @Override
+                    public void visitVariableDeclaration(@NotNull QCVariableDeclaration o) {
+                        o.getType().accept(this);
+                    }
+                });
+                boolean isComponent = Comparing.equal(name + "_x", key) ||
+                        Comparing.equal(name + "_y", key) ||
+                        Comparing.equal(name + "_z", key);
+                return Comparing.equal(name, key) || (isVector[0] && isComponent);
             }
         };
-        findAll(GlobalSearchScope.projectScope(getElement().getProject()), processor);
+        find(processor);
         return processor.getFoundValue();
     }
 
     @NotNull
     @Override
     public QCIdentifier[] getVariants() {
-        CollectProcessor<QCIdentifier> processor = new CollectProcessor<QCIdentifier>();
-        findAll(GlobalSearchScope.projectScope(getElement().getProject()), processor);
-        return ArrayUtil.toObjectArray(processor.getResults(), QCIdentifier.class);
+        return resolveAll();
     }
 
 }
