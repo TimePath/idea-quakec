@@ -176,7 +176,7 @@ parameter                   ::= type (s? parameter_list)? (s? identifier (s? '='
                                         getName setName
                                     ]
                                 }
-private parameter_list_     ::= '...' s? identifier | parameter? (s? ',' s? parameter)* (s? ',' s? ('...' s? identifier | parameter))?
+private parameter_list_     ::= '...' (s? identifier)? | parameter? (s? ',' s? parameter)* (s? ',' s? ('...' (s? identifier)? | parameter))?
 parameter_list              ::= '(' s? parameter_list_ s? ')'
 
 variable_modifiers          ::= (modifier s?)*
