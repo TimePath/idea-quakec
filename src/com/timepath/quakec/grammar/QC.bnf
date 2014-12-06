@@ -118,7 +118,8 @@
 // scopes
 
 root                        ::= (root_item)*
-private root_item           ::= !(<<eof>>) scope_root {pin=1}
+private root_item           ::= !(<<eof>>) scope_root {pin=1 recoverWhile=recover_root}
+private recover_root        ::= !(scope_root)
 private scope_common        ::= variable_declaration (s? ';') | typedef | s | ';'
 private scope_root          ::= method | scope_common
 private scope_block         ::= (statement | scope_common)*
