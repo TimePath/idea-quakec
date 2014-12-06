@@ -121,10 +121,12 @@ root                        ::= (root_item)*
 private root_item           ::= !(<<eof>>) scope_root {pin=1}
 private scope_common        ::= variable_declaration (s? ';') | typedef | s | ';'
 private scope_root          ::= method | scope_common
-private scope_block         ::= statement | scope_common
+private scope_block         ::= (statement | scope_common)*
+private scope_block_rec     ::= scope_block {recoverWhile=recover_scope}
+private recover_scope       ::= !('}')
 
-block_switch                ::= '{' s? (switch_body_statement s?)* '}'
-block                       ::= '{' s? scope_block* s? '}'
+block_switch                ::= '{' s? (switch_body_statement s?)* '}' {pin=1}
+block                       ::= '{' s? scope_block_rec s? '}' {pin=1}
 
 // regexps
 
@@ -173,7 +175,7 @@ parameter                   ::= type (s? parameter_list)? (s? identifier (s? '='
                                         getName setName
                                     ]
                                 }
-private parameter_list_     ::= '...' | parameter? (s? ',' s? parameter)* (s? ',' s? ('...' | parameter))?
+private parameter_list_     ::= '...' s? identifier | parameter? (s? ',' s? parameter)* (s? ',' s? ('...' s? identifier | parameter))?
 parameter_list              ::= '(' s? parameter_list_ s? ')'
 
 variable_modifiers          ::= (modifier s?)*
@@ -193,7 +195,7 @@ variable_declaration        ::= ('var' s?)? variable_modifiers type s? (var_norm
 
 private func_old            ::= type s? parameter_list s? identifier s? (';' | '=' s? (builtin_method (s? ';') | block (s? ';')?))?
 private func_new            ::= type s? identifier s? parameter_list s? ('=' s? builtin_method | block | ';')
-method                      ::= var_func | func_old | func_new  {
+method                      ::= variable_modifiers (var_func | func_old | func_new)  {
                                     implements="com.intellij.psi.PsiNamedElement"
                                     methods = [
                                         nameIdentifier  = "identifier[first]"
@@ -220,8 +222,8 @@ jump_statement              ::= ('continue' (s? identifier)? | 'break' (s? ident
 private select_statement    ::= if_statement
                             | switch_statement
 if_statement                ::= 'if' s? ('not' s?)? '(' s? expression s? ')' s? statement s? ('else' s? statement)?
-case_body_statement         ::= block | scope_block*
-switch_body_statement       ::= (case_statement s? case_body_statement)+
+case_body_statement         ::= block | scope_block
+switch_body_statement       ::= (variable_declaration | case_statement s? case_body_statement)+
 switch_statement            ::= 'switch' s? '(' s? expression s? ')' s? block_switch {methods=[testE="expression"]}
 private while_statement     ::= 'while' s? '(' s? expression s? ')'
 while_do_statement          ::= while_statement s? statement {methods=[test="expression"]}
