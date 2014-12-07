@@ -180,8 +180,10 @@ private parameter_list_     ::= '...' (s? identifier)? | parameter? (s? ',' s? p
 parameter_list              ::= '(' s? parameter_list_ s? ')'
 
 variable_modifiers          ::= (modifier s?)*
-variable_arraysize          ::= '[' expression ']'
-variable                    ::= identifier variable_arraysize? (s? '=' s? expression)?  {
+variable_arraysize          ::= '[' s? expression? s? ']'
+private variable_           ::= identifier s? variable_arraysize (s? '=' s? '{' s? literal (s? ',' s? literal)* s? '}')?
+                            | identifier (s? '=' s? expression)?
+variable                    ::= variable_ {
                                     implements="com.intellij.psi.PsiNamedElement"
                                     methods = [
                                         value           = "expression"
