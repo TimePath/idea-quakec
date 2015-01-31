@@ -157,7 +157,7 @@ comment                     ::= (preprocessor | comment_line | comment_block)
 literal                     ::= number | string
 builtin_method              ::= '#' number
 type_builtin                ::= 'void' | 'float' | 'vector' | 'string' | 'entity' | 'int' | 'bool'
-type                        ::= '.'? (type_builtin | identifier)
+type                        ::= '.'* (type_builtin | identifier)
 modifier                    ::= 'local' | 'const' | 'static' | 'noref'
 
 // declarations
