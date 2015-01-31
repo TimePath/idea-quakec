@@ -84,6 +84,8 @@ TOKEN_IDENTIFIER=[a-zA-Z_][a-zA-Z_0-9]*
   "vector"                   { return T_VECTOR; }
   "float"                    { return T_FLOAT; }
   "void"                     { return T_VOID; }
+  "int"                      { return T_INT; }
+  "bool"                     { return T_BOOL; }
   "..."                      { return T_ARGS; }
   "local"                    { return MOD_LOCAL; }
   "const"                    { return MOD_CONST; }

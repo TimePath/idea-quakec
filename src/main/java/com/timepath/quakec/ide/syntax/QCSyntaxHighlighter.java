@@ -102,6 +102,8 @@ public class QCSyntaxHighlighter extends SyntaxHighlighterBase {
                 || t == QCTypes.T_VECTOR
                 || t == QCTypes.T_STRING
                 || t == QCTypes.T_ENTITY
+                || t == QCTypes.T_INT
+                || t == QCTypes.T_BOOL
                 ) {
             return TYPE_KEYS;
         }

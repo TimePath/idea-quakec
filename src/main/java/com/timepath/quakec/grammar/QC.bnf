@@ -81,6 +81,8 @@
         T_VECTOR='vector'
         T_FLOAT='float'
         T_VOID='void'
+        T_INT='int'
+        T_BOOL='bool'
         T_ARGS='...'
 
         MOD_LOCAL='local'
@@ -153,7 +155,7 @@ private s                   ::= (space? comment)+ space? | space
 comment                     ::= (preprocessor | comment_line | comment_block)
 literal                     ::= number | string
 builtin_method              ::= '#' number
-type_builtin                ::= 'void' | 'float' | 'vector' | 'string' | 'entity'
+type_builtin                ::= 'void' | 'float' | 'vector' | 'string' | 'entity' | 'int' | 'bool'
 type                        ::= '.'? (type_builtin | identifier)
 modifier                    ::= 'local' | 'const' | 'noref'
 
