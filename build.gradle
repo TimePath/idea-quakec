@@ -30,9 +30,12 @@ idea.project.ipr {
     }
 }
 
-idea.module.iml {
-    withXml {
-        it.node.@type = "PLUGIN_MODULE"
+idea.module {
+    inheritOutputDirs = true
+    iml {
+        withXml {
+            it.node.@type = "PLUGIN_MODULE"
+        }
     }
 }
 
