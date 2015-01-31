@@ -85,10 +85,11 @@
         T_BOOL='bool'
         T_ARGS='...'
 
-        MOD_LOCAL='local'
         MOD_CONST='const'
+        MOD_STATIC='static'
         MOD_VAR='var'
         MOD_NOREF='noref'
+        MOD_LOCAL='local'
 
         KW_CONTINUE='continue'
         KW_BREAK='break'
@@ -157,7 +158,7 @@ literal                     ::= number | string
 builtin_method              ::= '#' number
 type_builtin                ::= 'void' | 'float' | 'vector' | 'string' | 'entity' | 'int' | 'bool'
 type                        ::= '.'? (type_builtin | identifier)
-modifier                    ::= 'local' | 'const' | 'noref'
+modifier                    ::= 'local' | 'const' | 'static' | 'noref'
 
 // declarations
 
@@ -251,7 +252,8 @@ iter_statement              ::= while_do_statement
 
 // expressions
 
-expression                  ::= assign_expression
+expression                  ::= comma_expression
+                            | assign_expression
                             | elvis_expression
                             | or_expression
                             | and_expression

@@ -87,10 +87,11 @@ TOKEN_IDENTIFIER=[a-zA-Z_][a-zA-Z_0-9]*
   "int"                      { return T_INT; }
   "bool"                     { return T_BOOL; }
   "..."                      { return T_ARGS; }
-  "local"                    { return MOD_LOCAL; }
   "const"                    { return MOD_CONST; }
+  "static"                   { return MOD_STATIC; }
   "var"                      { return MOD_VAR; }
   "noref"                    { return MOD_NOREF; }
+  "local"                    { return MOD_LOCAL; }
   "continue"                 { return KW_CONTINUE; }
   "break"                    { return KW_BREAK; }
   "goto"                     { return KW_GOTO; }
