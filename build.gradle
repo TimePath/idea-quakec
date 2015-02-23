@@ -1,15 +1,32 @@
-apply plugin: 'java'
-apply plugin: 'idea'
+buildscript {
+    ext.versions = [
+            kotlin : '0.10.195'
+    ]
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+    }
+}
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
+
+apply plugin: 'idea'
+apply plugin: 'kotlin'
 
 configurations {
     provided
 }
 
 dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
     provided fileTree(dir: 'idea-libs', include: '*.jar')
 }
 
