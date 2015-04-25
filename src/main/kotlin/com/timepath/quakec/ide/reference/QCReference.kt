@@ -1,5 +1,6 @@
 package com.timepath.quakec.ide.reference
 
+import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.util.Comparing
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
@@ -15,11 +16,7 @@ import com.intellij.util.containers.ContainerUtil
 import com.intellij.util.indexing.FileBasedIndex
 import com.timepath.quakec.ide.file.QCFileType
 import com.timepath.quakec.psi.*
-import com.intellij.openapi.fileTypes.FileType
 
-/**
- * @author TimePath
- */
 public class QCReference private(element: PsiElement) : PsiReferenceBase<PsiElement>(element, TextRange.allOf(element.getText())), PsiPolyVariantReference {
 
     private val key = element.getText()
@@ -137,9 +134,9 @@ public class QCReference private(element: PsiElement) : PsiReferenceBase<PsiElem
         return resolveAll()
     }
 
-    class object {
+    companion object {
 
-        public fun create(identifier: QCIdentifier): PsiReferenceBase<out PsiElement>? {
+        public fun create(identifier: QCIdentifier): PsiReferenceBase<PsiElement>? {
             if (isDeclaration(identifier)) {
                 return null
             }

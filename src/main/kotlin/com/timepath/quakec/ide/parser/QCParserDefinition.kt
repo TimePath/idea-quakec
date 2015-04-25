@@ -14,35 +14,24 @@ import com.timepath.quakec.parser.QCParser
 import com.timepath.quakec.psi.QCFile
 import com.timepath.quakec.psi.QCTypes
 
-/**
- * @author TimePath
- */
 public class QCParserDefinition : ParserDefinition {
 
-    override fun createLexer(project: Project) = FlexAdapter(_QCLexer())
+    override fun createLexer(project: Project?) = FlexAdapter(_QCLexer())
 
     override fun createParser(project: Project) = QCParser()
 
-    override fun getFileNodeType() = FILE
+    override fun getFileNodeType() = IFileElementType(QCLanguage)
 
-    override fun getWhitespaceTokens() = WHITE_SPACES
+    override fun getWhitespaceTokens() = TokenSet.create(TokenType.WHITE_SPACE)
 
-    override fun getCommentTokens() = COMMENTS
+    override fun getCommentTokens() = TokenSet.create(QCTypes.TOKEN_COMMENT_LINE, QCTypes.TOKEN_COMMENT_BLOCK)
 
-    override fun getStringLiteralElements() = STRINGS
+    override fun getStringLiteralElements() = TokenSet.create(QCTypes.TOKEN_STRING)
 
     override fun createElement(node: ASTNode) = QCTypes.Factory.createElement(node)
 
     override fun createFile(viewProvider: FileViewProvider) = QCFile(viewProvider)
 
     override fun spaceExistanceTypeBetweenTokens(left: ASTNode, right: ASTNode) = ParserDefinition.SpaceRequirements.MAY
-
-    class object {
-        public val WHITE_SPACES: TokenSet = TokenSet.create(TokenType.WHITE_SPACE)
-        public val COMMENTS: TokenSet = TokenSet.create(QCTypes.TOKEN_COMMENT_LINE, QCTypes.TOKEN_COMMENT_BLOCK)
-        public val STRINGS: TokenSet = TokenSet.create(QCTypes.TOKEN_STRING)
-
-        public val FILE: IFileElementType = IFileElementType(QCLanguage)
-    }
 
 }

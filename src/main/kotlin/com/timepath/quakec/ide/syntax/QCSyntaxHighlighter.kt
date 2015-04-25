@@ -4,17 +4,13 @@ import com.intellij.lang.LanguageParserDefinitions
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
+import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.openapi.options.colors.AttributesDescriptor
 import com.intellij.psi.tree.IElementType
 import com.timepath.quakec.ide.QCLanguage
 import com.timepath.quakec.psi.QCTypes
 
-import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey
-
-/**
- * @author TimePath
- */
 public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
 
     override fun getHighlightingLexer(): Lexer {
@@ -52,7 +48,7 @@ public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
         return EMPTY_KEYS
     }
 
-    class object {
+    companion object {
 
         public val BLOCK_COMMENT: TextAttributesKey = createTextAttributesKey("BLOCK_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT)
         public val IDENTIFIER: TextAttributesKey = createTextAttributesKey("IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER)

@@ -5,12 +5,9 @@ import com.intellij.openapi.options.colors.ColorSettingsPage
 import com.timepath.quakec.icons.QCIcons
 import com.timepath.quakec.ide.syntax.QCSyntaxHighlighter
 
-/**
- * @author TimePath
- */
 public class QCColorSettingsPage : ColorSettingsPage {
 
-    override fun getIcon() = QCIcons.FILE
+    override fun getIcon() = QCIcons.File
 
     override fun getHighlighter() = QCSyntaxHighlighter()
 

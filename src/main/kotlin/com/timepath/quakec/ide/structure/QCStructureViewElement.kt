@@ -10,12 +10,8 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.PlatformIcons
 import com.intellij.util.containers.ContainerUtil
 import com.timepath.quakec.psi.*
+import javax.swing.Icon
 
-import javax.swing.*
-
-/**
- * @author TimePath
- */
 public class QCStructureViewElement(private val root: QCFile) : StructureViewTreeElement {
 
     override fun getValue() = root

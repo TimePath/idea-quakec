@@ -5,9 +5,6 @@ import com.intellij.psi.FileViewProvider
 import com.timepath.quakec.ide.QCLanguage
 import com.timepath.quakec.ide.file.QCFileType
 
-/**
- * @author TimePath
- */
 public class QCFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, QCLanguage) {
 
     override fun getFileType() = QCFileType

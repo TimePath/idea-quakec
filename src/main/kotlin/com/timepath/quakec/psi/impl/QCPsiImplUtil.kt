@@ -1,15 +1,14 @@
 package com.timepath.quakec.psi.impl
 
-import kotlin.platform.platformStatic as static
-import com.timepath.quakec.psi.*
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFileFactory
+import com.intellij.psi.PsiReferenceBase
 import com.timepath.quakec.ide.file.QCFileType
 import com.timepath.quakec.ide.reference.QCReference
-import com.intellij.openapi.project.Project
-import com.intellij.psi.*
+import com.timepath.quakec.psi.*
+import kotlin.platform.platformStatic as static
 
-/**
- * @author TimePath
- */
 public object QCPsiImplUtil {
 
     fun createFile(project: Project, text: String): QCFile {
@@ -23,7 +22,7 @@ public object QCPsiImplUtil {
 
     fun createIdentifier(element: PsiElement, newName: String): PsiElement {
         val variable = create<QCVariableDeclaration>(element.getProject(), "void " + newName + ";")
-        return variable.getVariableList().get(0).getNameIdentifier()
+        return variable.getVariableList()[0].getNameIdentifier()
     }
 
     public static fun getName(element: QCIdentifier): String {
@@ -35,7 +34,7 @@ public object QCPsiImplUtil {
         return element
     }
 
-    public static fun getReference(self: QCIdentifier): PsiReferenceBase<out PsiElement>? {
+    public static fun getReference(self: QCIdentifier): PsiReferenceBase<PsiElement>? {
         return QCReference.create(self)
     }
 

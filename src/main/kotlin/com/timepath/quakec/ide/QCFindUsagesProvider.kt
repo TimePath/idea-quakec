@@ -13,9 +13,6 @@ import com.timepath.quakec.psi.QCParameter
 import com.timepath.quakec.psi.QCTypes
 import com.timepath.quakec.psi.QCVariable
 
-/**
- * @author TimePath
- */
 public class QCFindUsagesProvider : FindUsagesProvider {
 
     override fun getWordsScanner(): WordsScanner? {

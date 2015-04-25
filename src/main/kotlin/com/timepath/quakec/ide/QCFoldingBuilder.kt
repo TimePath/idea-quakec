@@ -8,9 +8,6 @@ import com.timepath.quakec.psi.QCTypes
 
 import java.util.ArrayList
 
-/**
- * @author TimePath
- */
 public class QCFoldingBuilder : FoldingBuilder {
     override fun buildFoldRegions(node: ASTNode, document: Document): Array<FoldingDescriptor> {
         val list = ArrayList<FoldingDescriptor>()

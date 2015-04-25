@@ -7,9 +7,6 @@ import com.intellij.lang.PsiStructureViewFactory
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiFile
 
-/**
- * @author TimePath
- */
 public class QCStructureViewFactory : PsiStructureViewFactory {
     override fun getStructureViewBuilder(psiFile: PsiFile): StructureViewBuilder? {
         return object : TreeBasedStructureViewBuilder() {

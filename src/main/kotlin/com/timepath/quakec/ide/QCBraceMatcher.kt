@@ -6,9 +6,6 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
 import com.timepath.quakec.psi.QCTypes
 
-/**
- * @author TimePath
- */
 public class QCBraceMatcher : PairedBraceMatcher {
 
     override fun getPairs() = PAIRS
@@ -21,7 +18,7 @@ public class QCBraceMatcher : PairedBraceMatcher {
         return openingBraceOffset
     }
 
-    class object {
+    companion object {
 
         private val PAIRS = array(
                 BracePair(QCTypes.BRACE_OPEN, QCTypes.BRACE_CLOSE, true),

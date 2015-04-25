@@ -9,9 +9,6 @@ import com.timepath.quakec.ide.reference.QCReference
 import com.timepath.quakec.psi.QCVariable
 import com.timepath.quakec.psi.QCVisitor
 
-/**
- * @author TimePath
- */
 public class UnusedVariableInspection : LocalInspectionTool() {
 
     override fun getDefaultLevel() = HighlightDisplayLevel.WARNING
