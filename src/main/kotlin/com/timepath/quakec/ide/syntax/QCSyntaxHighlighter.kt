@@ -17,7 +17,7 @@ public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
         return LanguageParserDefinitions.INSTANCE.forLanguage(QCLanguage).createLexer(null)
     }
 
-    override fun getTokenHighlights(t: IElementType): Array<TextAttributesKey> {
+    override fun getTokenHighlights(t: IElementType?): Array<TextAttributesKey> {
         if (t == QCTypes.TOKEN_COMMENT_BLOCK) {
             return BLOCK_COMMENT_KEYS
         }
