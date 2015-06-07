@@ -24,8 +24,25 @@ public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
         if (t == QCTypes.TOKEN_IDENTIFIER) {
             return IDENTIFIER_KEYS
         }
-        if (t == QCTypes.KW_BREAK || t == QCTypes.KW_CASE || t == QCTypes.KW_DEFAULT || t == QCTypes.KW_CONTINUE || t == QCTypes.KW_DO || t == QCTypes.KW_ELSE || t == QCTypes.KW_FOR || t == QCTypes.KW_GOTO || t == QCTypes.KW_IF || t == QCTypes.KW_RETURN || t == QCTypes.KW_SWITCH || t == QCTypes.KW_WHILE || t == QCTypes.KW_TYPEDEF) {
-            return KEYWORD_KEYS
+        when (t) {
+            QCTypes.KW_BREAK,
+            QCTypes.KW_CASE,
+            QCTypes.KW_DEFAULT,
+            QCTypes.KW_CONTINUE,
+            QCTypes.KW_DO,
+            QCTypes.KW_ELSE,
+            QCTypes.KW_FOR,
+            QCTypes.KW_GOTO,
+            QCTypes.KW_IF,
+            QCTypes.KW_RETURN,
+            QCTypes.KW_SWITCH,
+            QCTypes.KW_WHILE,
+            QCTypes.KW_TYPEDEF,
+            QCTypes.L_FALSE,
+            QCTypes.L_TRUE
+            -> {
+                return KEYWORD_KEYS
+            }
         }
         if (t == QCTypes.TOKEN_COMMENT_LINE) {
             return LINE_COMMENT_KEYS
@@ -60,18 +77,17 @@ public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
         public val STRING: TextAttributesKey = createTextAttributesKey("STRING", DefaultLanguageHighlighterColors.STRING)
         public val TYPE: TextAttributesKey = createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
 
-        private val BLOCK_COMMENT_KEYS = array(BLOCK_COMMENT)
-        private val IDENTIFIER_KEYS = array(IDENTIFIER)
-        private val KEYWORD_KEYS = array(KEYWORD)
-        private val LINE_COMMENT_KEYS = array(LINE_COMMENT)
-        private val MODIFIER_KEYS = array(MODIFIER)
-        private val NUMBER_KEYS = array(NUMBER)
-        private val PREPROC_KEYS = array(PREPROC)
-        private val STRING_KEYS = array(STRING)
-        private val TYPE_KEYS = array(TYPE)
+        private val BLOCK_COMMENT_KEYS = arrayOf(BLOCK_COMMENT)
+        private val IDENTIFIER_KEYS = arrayOf(IDENTIFIER)
+        private val KEYWORD_KEYS = arrayOf(KEYWORD)
+        private val LINE_COMMENT_KEYS = arrayOf(LINE_COMMENT)
+        private val MODIFIER_KEYS = arrayOf(MODIFIER)
+        private val NUMBER_KEYS = arrayOf(NUMBER)
+        private val PREPROC_KEYS = arrayOf(PREPROC)
+        private val STRING_KEYS = arrayOf(STRING)
+        private val TYPE_KEYS = arrayOf(TYPE)
 
-        public val DESCRIPTORS: Array<AttributesDescriptor> = array(
-                AttributesDescriptor("Block comment", BLOCK_COMMENT),
+        public val DESCRIPTORS: Array<AttributesDescriptor> = arrayOf(AttributesDescriptor("Block comment", BLOCK_COMMENT),
                 AttributesDescriptor("Identifier", IDENTIFIER),
                 AttributesDescriptor("Keyword", KEYWORD),
                 AttributesDescriptor("Line comment", LINE_COMMENT),
@@ -82,6 +98,6 @@ public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
                 AttributesDescriptor("Type", TYPE)
         )
 
-        private val EMPTY_KEYS = array<TextAttributesKey>()
+        private val EMPTY_KEYS = arrayOf<TextAttributesKey>()
     }
 }

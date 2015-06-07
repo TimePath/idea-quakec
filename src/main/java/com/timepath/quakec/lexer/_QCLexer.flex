@@ -87,6 +87,8 @@ TOKEN_IDENTIFIER=[a-zA-Z_][a-zA-Z_0-9]*
   "int"                      { return T_INT; }
   "bool"                     { return T_BOOL; }
   "..."                      { return T_ARGS; }
+  "true"                     { return L_TRUE; }
+  "false"                    { return L_FALSE; }
   "const"                    { return MOD_CONST; }
   "static"                   { return MOD_STATIC; }
   "var"                      { return MOD_VAR; }

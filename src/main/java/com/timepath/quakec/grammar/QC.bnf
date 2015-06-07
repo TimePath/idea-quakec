@@ -85,6 +85,9 @@
         T_BOOL='bool'
         T_ARGS='...'
 
+        L_TRUE='true'
+        L_FALSE='false'
+
         MOD_CONST='const'
         MOD_STATIC='static'
         MOD_VAR='var'
@@ -154,7 +157,7 @@ identifier                  ::= token_identifier {
 
 private s                   ::= (space? comment)+ space? | space
 comment                     ::= (preprocessor | comment_line | comment_block)
-literal                     ::= number | string
+literal                     ::= number | string | 'true' | 'false'
 builtin_method              ::= '#' number
 type_builtin                ::= 'void' | 'float' | 'vector' | 'string' | 'entity' | 'int' | 'bool'
 type                        ::= '.'* (type_builtin | identifier)

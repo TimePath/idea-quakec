@@ -20,7 +20,7 @@ public class QCBraceMatcher : PairedBraceMatcher {
 
     companion object {
 
-        private val PAIRS = array(
+        private val PAIRS = arrayOf(
                 BracePair(QCTypes.BRACE_OPEN, QCTypes.BRACE_CLOSE, true),
                 BracePair(QCTypes.PAREN_OPEN, QCTypes.PAREN_CLOSE, false),
                 BracePair(QCTypes.INDEX_OPEN, QCTypes.INDEX_CLOSE, false)

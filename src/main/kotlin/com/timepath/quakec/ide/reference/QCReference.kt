@@ -17,7 +17,8 @@ import com.intellij.util.indexing.FileBasedIndex
 import com.timepath.quakec.ide.file.QCFileType
 import com.timepath.quakec.psi.*
 
-public class QCReference private(element: PsiElement) : PsiReferenceBase<PsiElement>(element, TextRange.allOf(element.getText())), PsiPolyVariantReference {
+public class QCReference private constructor(element: PsiElement)
+: PsiReferenceBase<PsiElement>(element, TextRange.allOf(element.getText())), PsiPolyVariantReference {
 
     private val key = element.getText()
 
@@ -74,9 +75,8 @@ public class QCReference private(element: PsiElement) : PsiReferenceBase<PsiElem
                     override fun visitElement(element: PsiElement?) {
                         super.visitElement(element)
                         if (element is QCIdentifier) {
-                            val identifier = element : QCIdentifier
-                            if (isDeclaration(identifier)) {
-                                result.add(identifier)
+                            if (isDeclaration(element)) {
+                                result.add(element)
                             }
                         }
                         if (!isBlockElement(element)) {
@@ -91,7 +91,7 @@ public class QCReference private(element: PsiElement) : PsiReferenceBase<PsiElem
 
     override fun multiResolve(incompleteCode: Boolean) = resolveAll().map {
         PsiElementResolveResult(it)
-    }.copyToArray()
+    }.toTypedArray()
 
     private fun resolveAll(): Array<QCIdentifier> {
         val processor = CollectProcessor<QCIdentifier>()
@@ -104,10 +104,10 @@ public class QCReference private(element: PsiElement) : PsiReferenceBase<PsiElem
             override fun accept(o: QCIdentifier?): Boolean {
                 if (o == null) return false
                 val name = o.getName()
-                val isVector = booleanArray(false)
+                var isVector = false
                 o.getParent().accept(object : QCVisitor() {
                     override fun visitType(o: QCType) {
-                        isVector[0] = "vector" == o.getText()
+                        isVector = "vector" == o.getText()
                     }
 
                     override fun visitParameter(o: QCParameter) {
@@ -123,7 +123,7 @@ public class QCReference private(element: PsiElement) : PsiReferenceBase<PsiElem
                     }
                 })
                 val isComponent = Comparing.equal(name + "_x", key) || Comparing.equal(name + "_y", key) || Comparing.equal(name + "_z", key)
-                return Comparing.equal(name, key) || (isVector[0] && isComponent)
+                return Comparing.equal(name, key) || (isVector && isComponent)
             }
         }
         find(processor)

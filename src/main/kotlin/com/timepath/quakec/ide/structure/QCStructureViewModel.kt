@@ -16,7 +16,7 @@ public class QCStructureViewModel(psiFile: PsiFile, editor: Editor) : StructureV
         this.withSuitableClasses(javaClass<QCVariable>(), javaClass<QCMethod>(), javaClass<QCTypedef>())
     }
 
-    override fun getSorters() = array(Sorter.ALPHA_SORTER)
+    override fun getSorters() = arrayOf(Sorter.ALPHA_SORTER)
 
     override fun isAlwaysShowsPlus(element: StructureViewTreeElement): Boolean {
         return false

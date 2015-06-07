@@ -84,6 +84,6 @@ public class QCStructureViewElement(private val root: QCFile) : StructureViewTre
             }
             treeElements.add(Child(declaration, icon))
         }
-        return treeElements.copyToArray()
+        return treeElements.toTypedArray()
     }
 }
