@@ -25,49 +25,37 @@ public object QCPsiImplUtil {
         return variable.getVariableList()[0].getNameIdentifier()
     }
 
-    public static fun getName(element: QCIdentifier): String {
-        return element.getNameIdentifier().getText()
-    }
+    public static fun getName(element: QCIdentifier): String = element.getNameIdentifier().getText()
 
     public static fun setName(element: QCIdentifier, newName: String): PsiElement {
         element.replace(createIdentifier(element, newName))
         return element
     }
 
-    public static fun getReference(self: QCIdentifier): PsiReferenceBase<PsiElement>? {
-        return QCReference.create(self)
-    }
+    public static fun getReference(self: QCIdentifier): PsiReferenceBase<PsiElement>? = QCReference.create(self)
 
-    public static fun getName(element: QCTypedef): String {
-        return element.getNameIdentifier().getText()
-    }
+    public static fun getName(element: QCTypedef): String = element.getNameIdentifier().getText()
 
     public static fun setName(element: QCTypedef, newName: String): PsiElement {
         element.getNameIdentifier().replace(createIdentifier(element, newName))
         return element
     }
 
-    public static fun getName(element: QCParameter): String? {
-        return element.getNameIdentifier()?.getText()
-    }
+    public static fun getName(element: QCParameter): String? = element.getNameIdentifier()?.getText()
 
     public static fun setName(element: QCParameter, newName: String): PsiElement {
         element.getNameIdentifier()?.replace(createIdentifier(element, newName))
         return element
     }
 
-    public static fun getName(element: QCVariable): String {
-        return element.getNameIdentifier().getText()
-    }
+    public static fun getName(element: QCVariable): String = element.getNameIdentifier().getText()
 
     public static fun setName(element: QCVariable, newName: String): PsiElement {
         element.getNameIdentifier().replace(createIdentifier(element, newName))
         return element
     }
 
-    public static fun getName(element: QCMethod): String {
-        return element.getNameIdentifier().getText()
-    }
+    public static fun getName(element: QCMethod): String = element.getNameIdentifier().getText()
 
     public static fun setName(element: QCMethod, newName: String): PsiElement {
         element.getNameIdentifier().replace(createIdentifier(element, newName))

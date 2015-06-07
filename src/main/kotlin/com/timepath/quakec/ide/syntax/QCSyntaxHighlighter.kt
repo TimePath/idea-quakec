@@ -13,9 +13,7 @@ import com.timepath.quakec.psi.QCTypes
 
 public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
 
-    override fun getHighlightingLexer(): Lexer {
-        return LanguageParserDefinitions.INSTANCE.forLanguage(QCLanguage).createLexer(null)
-    }
+    override fun getHighlightingLexer() = LanguageParserDefinitions.INSTANCE.forLanguage(QCLanguage).createLexer(null)
 
     override fun getTokenHighlights(t: IElementType?): Array<TextAttributesKey> {
         if (t == QCTypes.TOKEN_COMMENT_BLOCK) {
@@ -39,16 +37,18 @@ public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
             QCTypes.KW_WHILE,
             QCTypes.KW_TYPEDEF,
             QCTypes.L_FALSE,
-            QCTypes.L_TRUE
-            -> {
+            QCTypes.L_TRUE -> {
                 return KEYWORD_KEYS
             }
         }
         if (t == QCTypes.TOKEN_COMMENT_LINE) {
             return LINE_COMMENT_KEYS
         }
-        if (t == QCTypes.MOD_CONST || t == QCTypes.MOD_VAR) {
-            return MODIFIER_KEYS
+        when (t) {
+            QCTypes.MOD_CONST,
+            QCTypes.MOD_VAR -> {
+                return MODIFIER_KEYS
+            }
         }
         if (t == QCTypes.TOKEN_NUMBER) {
             return NUMBER_KEYS
@@ -59,8 +59,16 @@ public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
         if (t == QCTypes.TOKEN_STRING) {
             return STRING_KEYS
         }
-        if (t == QCTypes.T_VOID || t == QCTypes.T_FLOAT || t == QCTypes.T_VECTOR || t == QCTypes.T_STRING || t == QCTypes.T_ENTITY || t == QCTypes.T_INT || t == QCTypes.T_BOOL) {
-            return TYPE_KEYS
+        when (t) {
+            QCTypes.T_VOID,
+            QCTypes.T_FLOAT,
+            QCTypes.T_VECTOR,
+            QCTypes.T_STRING,
+            QCTypes.T_ENTITY,
+            QCTypes.T_INT,
+            QCTypes.T_BOOL -> {
+                return TYPE_KEYS
+            }
         }
         return EMPTY_KEYS
     }

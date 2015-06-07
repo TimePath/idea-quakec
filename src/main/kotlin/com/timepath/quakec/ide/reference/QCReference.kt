@@ -22,13 +22,9 @@ public class QCReference private constructor(element: PsiElement)
 
     private val key = element.getText()
 
-    private fun isScopeElement(element: PsiElement): Boolean {
-        return isBlockElement(element) || element is QCMethod || element is QCFile
-    }
+    private fun PsiElement.isScopeElement() = this.isBlockElement() || this is QCMethod || this is QCFile
 
-    private fun isBlockElement(element: PsiElement?): Boolean {
-        return element is QCBlock || element is QCBlockSwitch
-    }
+    private fun PsiElement?.isBlockElement() = this is QCBlock || this is QCBlockSwitch
 
     private fun getScopes(): List<PsiElement> {
         val scopes = ContainerUtil.newLinkedList<PsiElement>()
@@ -36,7 +32,7 @@ public class QCReference private constructor(element: PsiElement)
         while (true) {
             e = e.getParent()
             if (e == null) break
-            if (isScopeElement(e)) {
+            if (e.isScopeElement()) {
                 scopes.add(e)
             }
         }
@@ -79,7 +75,7 @@ public class QCReference private constructor(element: PsiElement)
                                 result.add(element)
                             }
                         }
-                        if (!isBlockElement(element)) {
+                        if (!element.isBlockElement()) {
                             element!!.acceptChildren(this)
                         }
                     }
@@ -130,9 +126,7 @@ public class QCReference private constructor(element: PsiElement)
         return processor.getFoundValue()
     }
 
-    override fun getVariants(): Array<QCIdentifier> {
-        return resolveAll()
-    }
+    override fun getVariants() = resolveAll()
 
     companion object {
 

@@ -18,11 +18,7 @@ public class QCStructureViewModel(psiFile: PsiFile, editor: Editor) : StructureV
 
     override fun getSorters() = arrayOf(Sorter.ALPHA_SORTER)
 
-    override fun isAlwaysShowsPlus(element: StructureViewTreeElement): Boolean {
-        return false
-    }
+    override fun isAlwaysShowsPlus(element: StructureViewTreeElement) = false
 
-    override fun isAlwaysLeaf(element: StructureViewTreeElement): Boolean {
-        return (element is QCStructureViewElement)
-    }
+    override fun isAlwaysLeaf(element: StructureViewTreeElement) = element is QCStructureViewElement
 }

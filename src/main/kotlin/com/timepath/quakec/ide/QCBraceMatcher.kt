@@ -10,13 +10,9 @@ public class QCBraceMatcher : PairedBraceMatcher {
 
     override fun getPairs() = PAIRS
 
-    override fun isPairedBracesAllowedBeforeType(lbraceType: IElementType, contextType: IElementType?): Boolean {
-        return true
-    }
+    override fun isPairedBracesAllowedBeforeType(lbraceType: IElementType, contextType: IElementType?) = true
 
-    override fun getCodeConstructStart(file: PsiFile, openingBraceOffset: Int): Int {
-        return openingBraceOffset
-    }
+    override fun getCodeConstructStart(file: PsiFile, openingBraceOffset: Int) = openingBraceOffset
 
     companion object {
 

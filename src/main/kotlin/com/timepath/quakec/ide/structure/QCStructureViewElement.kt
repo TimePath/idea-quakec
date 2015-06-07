@@ -16,9 +16,7 @@ public class QCStructureViewElement(private val root: QCFile) : StructureViewTre
 
     override fun getValue() = root
 
-    override fun navigate(requestFocus: Boolean) {
-        root.navigate(requestFocus)
-    }
+    override fun navigate(requestFocus: Boolean) = root.navigate(requestFocus)
 
     override fun canNavigate() = root.canNavigate()
 

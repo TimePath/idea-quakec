@@ -6,5 +6,5 @@ import org.jetbrains.annotations.NonNls
 
 public class QCTokenType(NonNls debugName: String) : IElementType(debugName, QCLanguage) {
 
-    override fun toString() = "TokenTypeImpl." + super.toString()
+    override fun toString() = "TokenTypeImpl.${super.toString()}"
 }
