@@ -35,6 +35,8 @@
                            language="QuakeC"/>
         <lang.commenter implementationClass="com.timepath.quakec.ide.QCCommenter"
                         language="QuakeC"/>
+        <lang.elementManipulator forClass="com.timepath.quakec.psi.QCIdentifier"
+                                 implementationClass="com.timepath.quakec.psi.QCIdentifierManipulator"/>
         <lang.findUsagesProvider implementationClass="com.timepath.quakec.ide.QCFindUsagesProvider"
                                  language="QuakeC"/>
         <lang.foldingBuilder implementationClass="com.timepath.quakec.ide.QCFoldingBuilder"
