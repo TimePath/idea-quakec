@@ -20,7 +20,9 @@ public class QCParserDefinition : ParserDefinition {
 
     override fun createParser(project: Project) = QCParser()
 
-    override fun getFileNodeType() = IFileElementType(QCLanguage)
+    private val fileNodeType = IFileElementType(QCLanguage)
+
+    override fun getFileNodeType() = fileNodeType
 
     override fun getWhitespaceTokens() = TokenSet.create(TokenType.WHITE_SPACE)
 
