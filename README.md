@@ -4,14 +4,11 @@
 
 1. `git clone`
 2. Import from gradle
-3. `./gradlew setup`
-4. `./get-idea-libs.sh`
-5. [Configure IntelliJ SDK](http://confluence.jetbrains.com/display/IDEADEV/Getting+Started+with+Plugin+Development)
-6. Generate [Parser Code](https://github.com/TimePath/idea-quakec/blob/master/src/main/java/com/timepath/quakec/grammar/QC.bnf) with [Grammar-Kit](https://github.com/JetBrains/Grammar-Kit)
-7. Generate JFlex Lexer
-8. Run JFlex Generator
-9. Remove `src/main/resources` from module test source folders
-10. Add a plugin run configuration
+3. Generate [Parser Code](https://github.com/TimePath/idea-quakec/blob/master/src/main/java/com/timepath/quakec/grammar/QC.bnf) with [Grammar-Kit](https://github.com/JetBrains/Grammar-Kit)
+4. Twice
+5. Generate JFlex Lexer
+6. Run JFlex Generator
+7. Run `gradle runIdea`
 
 ## Resources
 

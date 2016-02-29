@@ -8,17 +8,17 @@ import com.timepath.quakec.psi.QCTypes
 
 import java.util.ArrayList
 
-public class QCFoldingBuilder : FoldingBuilder {
+class QCFoldingBuilder : FoldingBuilder {
     override fun buildFoldRegions(node: ASTNode, document: Document): Array<FoldingDescriptor> {
         val list = ArrayList<FoldingDescriptor>()
         buildFolding(node, list)
-        return list.toArray<FoldingDescriptor>(arrayOfNulls<FoldingDescriptor>(list.size()))
+        return list.toTypedArray()
     }
 
     private fun buildFolding(node: ASTNode, list: MutableList<FoldingDescriptor>) {
-        val elementType = node.getElementType()
+        val elementType = node.elementType
         if (elementType == QCTypes.BLOCK || elementType == QCTypes.BLOCK_SWITCH) {
-            val range = node.getTextRange()
+            val range = node.textRange
             list.add(FoldingDescriptor(node, range))
         }
         for (child in node.getChildren(null)) {

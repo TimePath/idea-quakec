@@ -12,7 +12,7 @@ import com.intellij.util.containers.ContainerUtil
 import com.timepath.quakec.psi.*
 import javax.swing.Icon
 
-public class QCStructureViewElement(private val root: QCFile) : StructureViewTreeElement {
+class QCStructureViewElement(private val root: QCFile) : StructureViewTreeElement {
 
     override fun getValue() = root
 
@@ -22,7 +22,7 @@ public class QCStructureViewElement(private val root: QCFile) : StructureViewTre
 
     override fun canNavigateToSource() = root.canNavigateToSource()
 
-    override fun getPresentation() = root.getPresentation()
+    override fun getPresentation() = root.presentation!!
 
     override fun getChildren(): Array<TreeElement> {
         class Child(private val element: PsiNamedElement, private val i: Icon) : StructureViewTreeElement, SortableTreeElement {
@@ -43,11 +43,11 @@ public class QCStructureViewElement(private val root: QCFile) : StructureViewTre
                 return element is NavigationItem && element.canNavigateToSource()
             }
 
-            override fun getAlphaSortKey() = element.getName() ?: ""
+            override fun getAlphaSortKey() = element.name ?: ""
 
             override fun getPresentation(): ItemPresentation {
                 return object : ItemPresentation {
-                    override fun getPresentableText() = element.getName()
+                    override fun getPresentableText() = element.name
 
                     override fun getLocationString() = null
 
@@ -59,25 +59,25 @@ public class QCStructureViewElement(private val root: QCFile) : StructureViewTre
         }
 
         val treeElements = ContainerUtil.newArrayList<TreeElement>()
-        val types = PsiTreeUtil.getChildrenOfTypeAsList<QCTypedef>(root, javaClass<QCTypedef>())
+        val types = PsiTreeUtil.getChildrenOfTypeAsList(root, QCTypedef::class.java)
         for (e in types) {
             treeElements.add(Child(e, PlatformIcons.INTERFACE_ICON))
         }
-        val vars = PsiTreeUtil.getChildrenOfTypeAsList<QCVariableDeclaration>(root, javaClass<QCVariableDeclaration>())
+        val vars = PsiTreeUtil.getChildrenOfTypeAsList(root, QCVariableDeclaration::class.java)
         for (declaration in vars) {
             val icon = when {
-                declaration.getType().getText().startsWith(".") -> PlatformIcons.FIELD_ICON
+                declaration.type.text.startsWith(".") -> PlatformIcons.FIELD_ICON
                 else -> PlatformIcons.VARIABLE_ICON
             }
-            for (variable in PsiTreeUtil.getChildrenOfTypeAsList<QCVariable>(declaration, javaClass<QCVariable>())) {
+            for (variable in PsiTreeUtil.getChildrenOfTypeAsList(declaration, QCVariable::class.java)) {
                 treeElements.add(Child(variable, icon))
             }
         }
-        val funcs = PsiTreeUtil.getChildrenOfTypeAsList<QCMethod>(root, javaClass<QCMethod>())
+        val funcs = PsiTreeUtil.getChildrenOfTypeAsList(root, QCMethod::class.java)
         for (declaration in funcs) {
-            val type = declaration.getType()
+            val type = declaration.type
             val icon = when {
-                type != null && type.getText().startsWith(".") -> PlatformIcons.METHOD_ICON
+                type != null && type.text.startsWith(".") -> PlatformIcons.METHOD_ICON
                 else -> PlatformIcons.FUNCTION_ICON
             }
             treeElements.add(Child(declaration, icon))

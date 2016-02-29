@@ -2,7 +2,7 @@ package com.timepath.quakec.ide
 
 import com.intellij.lang.Commenter
 
-public class QCCommenter : Commenter {
+class QCCommenter : Commenter {
     override fun getLineCommentPrefix() = "//"
 
     override fun getBlockCommentPrefix() = "/*"

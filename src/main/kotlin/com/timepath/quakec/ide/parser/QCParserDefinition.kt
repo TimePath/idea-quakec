@@ -14,7 +14,7 @@ import com.timepath.quakec.parser.QCParser
 import com.timepath.quakec.psi.QCFile
 import com.timepath.quakec.psi.QCTypes
 
-public class QCParserDefinition : ParserDefinition {
+class QCParserDefinition : ParserDefinition {
 
     override fun createLexer(project: Project?) = FlexAdapter(_QCLexer())
 

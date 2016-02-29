@@ -6,7 +6,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
 import com.timepath.quakec.psi.QCTypes
 
-public class QCBraceMatcher : PairedBraceMatcher {
+class QCBraceMatcher : PairedBraceMatcher {
 
     override fun getPairs() = PAIRS
 

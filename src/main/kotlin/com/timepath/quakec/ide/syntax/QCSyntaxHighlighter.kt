@@ -11,7 +11,7 @@ import com.intellij.psi.tree.IElementType
 import com.timepath.quakec.ide.QCLanguage
 import com.timepath.quakec.psi.QCTypes
 
-public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
+class QCSyntaxHighlighter : SyntaxHighlighterBase() {
 
     override fun getHighlightingLexer() = LanguageParserDefinitions.INSTANCE.forLanguage(QCLanguage).createLexer(null)
 
@@ -75,15 +75,15 @@ public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
 
     companion object {
 
-        public val BLOCK_COMMENT: TextAttributesKey = createTextAttributesKey("BLOCK_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT)
-        public val IDENTIFIER: TextAttributesKey = createTextAttributesKey("IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER)
-        public val KEYWORD: TextAttributesKey = createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
-        public val LINE_COMMENT: TextAttributesKey = createTextAttributesKey("LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
-        public val MODIFIER: TextAttributesKey = createTextAttributesKey("MODIFIER", DefaultLanguageHighlighterColors.KEYWORD)
-        public val NUMBER: TextAttributesKey = createTextAttributesKey("NUMBER", DefaultLanguageHighlighterColors.NUMBER)
-        public val PREPROC: TextAttributesKey = createTextAttributesKey("PREPROC", DefaultLanguageHighlighterColors.METADATA)
-        public val STRING: TextAttributesKey = createTextAttributesKey("STRING", DefaultLanguageHighlighterColors.STRING)
-        public val TYPE: TextAttributesKey = createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
+        val BLOCK_COMMENT: TextAttributesKey = createTextAttributesKey("BLOCK_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT)
+        val IDENTIFIER: TextAttributesKey = createTextAttributesKey("IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER)
+        val KEYWORD: TextAttributesKey = createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
+        val LINE_COMMENT: TextAttributesKey = createTextAttributesKey("LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
+        val MODIFIER: TextAttributesKey = createTextAttributesKey("MODIFIER", DefaultLanguageHighlighterColors.KEYWORD)
+        val NUMBER: TextAttributesKey = createTextAttributesKey("NUMBER", DefaultLanguageHighlighterColors.NUMBER)
+        val PREPROC: TextAttributesKey = createTextAttributesKey("PREPROC", DefaultLanguageHighlighterColors.METADATA)
+        val STRING: TextAttributesKey = createTextAttributesKey("STRING", DefaultLanguageHighlighterColors.STRING)
+        val TYPE: TextAttributesKey = createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
 
         private val BLOCK_COMMENT_KEYS = arrayOf(BLOCK_COMMENT)
         private val IDENTIFIER_KEYS = arrayOf(IDENTIFIER)
@@ -95,7 +95,7 @@ public class QCSyntaxHighlighter : SyntaxHighlighterBase() {
         private val STRING_KEYS = arrayOf(STRING)
         private val TYPE_KEYS = arrayOf(TYPE)
 
-        public val DESCRIPTORS: Array<AttributesDescriptor> = arrayOf(AttributesDescriptor("Block comment", BLOCK_COMMENT),
+        val DESCRIPTORS: Array<AttributesDescriptor> = arrayOf(AttributesDescriptor("Block comment", BLOCK_COMMENT),
                 AttributesDescriptor("Identifier", IDENTIFIER),
                 AttributesDescriptor("Keyword", KEYWORD),
                 AttributesDescriptor("Line comment", LINE_COMMENT),

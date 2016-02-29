@@ -7,7 +7,7 @@ import com.intellij.lang.PsiStructureViewFactory
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiFile
 
-public class QCStructureViewFactory : PsiStructureViewFactory {
+class QCStructureViewFactory : PsiStructureViewFactory {
     override fun getStructureViewBuilder(psiFile: PsiFile): StructureViewBuilder? {
         return object : TreeBasedStructureViewBuilder() {
             override fun createStructureViewModel(editor: Editor?): StructureViewModel {

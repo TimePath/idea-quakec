@@ -1,11 +1,6 @@
 qcide.zip
 
-idea.tar.gz
-idea-IC-*
-idea-libs
-
 idea-flex.skeleton
-JFlex.jar
 src/main/java/com/timepath/quakec/lexer/_QCLexer.java
 
 ### JetBrains template

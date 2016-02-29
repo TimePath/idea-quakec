@@ -13,7 +13,7 @@ import com.timepath.quakec.psi.QCParameter
 import com.timepath.quakec.psi.QCTypes
 import com.timepath.quakec.psi.QCVariable
 
-public class QCFindUsagesProvider : FindUsagesProvider {
+class QCFindUsagesProvider : FindUsagesProvider {
 
     override fun getWordsScanner(): WordsScanner? {
         return DefaultWordsScanner(LanguageParserDefinitions.INSTANCE.forLanguage(QCLanguage).createLexer(null),
@@ -35,7 +35,7 @@ public class QCFindUsagesProvider : FindUsagesProvider {
     }
 
     override fun getDescriptiveName(element: PsiElement) = when (element) {
-        is PsiNamedElement -> element.getName()
+        is PsiNamedElement -> element.name
         else -> null
     } ?: "<unnamed>"
 

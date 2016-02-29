@@ -11,9 +11,9 @@ import com.timepath.quakec.psi.QCMethod
 import com.timepath.quakec.psi.QCTypedef
 import com.timepath.quakec.psi.QCVariable
 
-public class QCStructureViewModel(psiFile: PsiFile, editor: Editor) : StructureViewModelBase(psiFile, editor, QCStructureViewElement(psiFile as QCFile)), StructureViewModel.ElementInfoProvider {
+class QCStructureViewModel(psiFile: PsiFile, editor: Editor) : StructureViewModelBase(psiFile, editor, QCStructureViewElement(psiFile as QCFile)), StructureViewModel.ElementInfoProvider {
     init {
-        this.withSuitableClasses(javaClass<QCVariable>(), javaClass<QCMethod>(), javaClass<QCTypedef>())
+        this.withSuitableClasses(QCVariable::class.java, QCMethod::class.java, QCTypedef::class.java)
     }
 
     override fun getSorters() = arrayOf(Sorter.ALPHA_SORTER)

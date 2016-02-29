@@ -9,7 +9,7 @@ import com.timepath.quakec.ide.reference.QCReference
 import com.timepath.quakec.psi.QCVariable
 import com.timepath.quakec.psi.QCVisitor
 
-public class UnusedVariableInspection : LocalInspectionTool() {
+class UnusedVariableInspection : LocalInspectionTool() {
 
     override fun getDefaultLevel() = HighlightDisplayLevel.WARNING
 
@@ -17,7 +17,7 @@ public class UnusedVariableInspection : LocalInspectionTool() {
         return object : QCVisitor() {
             override fun visitVariable(o: QCVariable) {
                 super.visitVariable(o)
-                val id = o.getNameIdentifier()
+                val id = o.nameIdentifier
                 val psiReferenceBase = QCReference.create(id)
                 if (psiReferenceBase != null && psiReferenceBase.resolve() == null)
                     holder.registerProblem(id, "Unused variable", ProblemHighlightType.GENERIC_ERROR_OR_WARNING)

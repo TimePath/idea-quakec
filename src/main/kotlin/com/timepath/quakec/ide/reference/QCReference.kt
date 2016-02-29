@@ -8,7 +8,6 @@ import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
-import com.intellij.util.ArrayUtil
 import com.intellij.util.CommonProcessors.CollectProcessor
 import com.intellij.util.CommonProcessors.FindProcessor
 import com.intellij.util.Processor
@@ -17,10 +16,10 @@ import com.intellij.util.indexing.FileBasedIndex
 import com.timepath.quakec.ide.file.QCFileType
 import com.timepath.quakec.psi.*
 
-public class QCReference private constructor(element: PsiElement)
-: PsiReferenceBase<PsiElement>(element, TextRange.allOf(element.getText())), PsiPolyVariantReference {
+class QCReference private constructor(element: PsiElement)
+: PsiReferenceBase<PsiElement>(element, TextRange.allOf(element.text)), PsiPolyVariantReference {
 
-    private val key = element.getText()
+    private val key = element.text
 
     private fun PsiElement.isScopeElement() = this.isBlockElement() || this is QCMethod || this is QCFile
 
@@ -28,15 +27,15 @@ public class QCReference private constructor(element: PsiElement)
 
     private fun getScopes(): List<PsiElement> {
         val scopes = ContainerUtil.newLinkedList<PsiElement>()
-        var e = getElement()
+        var e = element
         while (true) {
-            e = e.getParent()
+            e = e.parent
             if (e == null) break
             if (e.isScopeElement()) {
                 scopes.add(e)
             }
         }
-        val project = getElement().getProject()
+        val project = element.project
         val psiManager = PsiManager.getInstance(project)
         val fileBasedIndex = FileBasedIndex.getInstance()
         val files = fileBasedIndex.getContainingFiles<FileType, Void>(FileTypeIndex.NAME, QCFileType, GlobalSearchScope.projectScope(project))
@@ -92,30 +91,30 @@ public class QCReference private constructor(element: PsiElement)
     private fun resolveAll(): Array<QCIdentifier> {
         val processor = CollectProcessor<QCIdentifier>()
         find(processor)
-        return ArrayUtil.toObjectArray<QCIdentifier>(processor.getResults(), javaClass<QCIdentifier>())
+        return processor.results.toTypedArray()
     }
 
     override fun resolve(): PsiElement? {
         val processor = object : FindProcessor<QCIdentifier>() {
             override fun accept(o: QCIdentifier?): Boolean {
                 if (o == null) return false
-                val name = o.getName()
+                val name = o.name
                 var isVector = false
-                o.getParent().accept(object : QCVisitor() {
+                o.parent.accept(object : QCVisitor() {
                     override fun visitType(o: QCType) {
-                        isVector = "vector" == o.getText()
+                        isVector = "vector" == o.text
                     }
 
                     override fun visitParameter(o: QCParameter) {
-                        o.getType().accept(this)
+                        o.type.accept(this)
                     }
 
                     override fun visitVariable(o: QCVariable) {
-                        o.getParent().accept(this)
+                        o.parent.accept(this)
                     }
 
                     override fun visitVariableDeclaration(o: QCVariableDeclaration) {
-                        o.getType().accept(this)
+                        o.type.accept(this)
                     }
                 })
                 val isComponent = Comparing.equal(name + "_x", key) || Comparing.equal(name + "_y", key) || Comparing.equal(name + "_z", key)
@@ -123,14 +122,14 @@ public class QCReference private constructor(element: PsiElement)
             }
         }
         find(processor)
-        return processor.getFoundValue()
+        return processor.foundValue
     }
 
     override fun getVariants() = resolveAll()
 
     companion object {
 
-        public fun create(identifier: QCIdentifier): PsiReferenceBase<PsiElement>? {
+        fun create(identifier: QCIdentifier): PsiReferenceBase<PsiElement>? {
             if (isDeclaration(identifier)) {
                 return null
             }
@@ -138,7 +137,7 @@ public class QCReference private constructor(element: PsiElement)
         }
 
         private fun isDeclaration(identifier: QCIdentifier): Boolean {
-            val parent = identifier.getParent()
+            val parent = identifier.parent
             return parent is QCMethod || parent is QCParameter || parent is QCVariable
         }
     }
