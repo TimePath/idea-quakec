@@ -11,7 +11,7 @@ import com.timepath.quakec.psi.QCVisitor
 
 class UnusedVariableInspection : LocalInspectionTool() {
 
-    override fun getDefaultLevel() = HighlightDisplayLevel.WARNING
+    override fun getDefaultLevel() = HighlightDisplayLevel.WARNING!!
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : QCVisitor() {

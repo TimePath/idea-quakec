@@ -39,9 +39,7 @@ class QCReference private constructor(element: PsiElement)
         val psiManager = PsiManager.getInstance(project)
         val fileBasedIndex = FileBasedIndex.getInstance()
         val files = fileBasedIndex.getContainingFiles<FileType, Void>(FileTypeIndex.NAME, QCFileType, GlobalSearchScope.projectScope(project))
-        for (v in files) {
-            scopes.add(psiManager.findFile(v))
-        }
+        files.mapTo(scopes) { psiManager.findFile(it) }
         return scopes
     }
 
@@ -61,7 +59,7 @@ class QCReference private constructor(element: PsiElement)
     private fun findScope(parent: PsiElement): List<QCIdentifier> {
         return CachedValuesManager.getCachedValue<List<QCIdentifier>>(parent, object : CachedValueProvider<List<QCIdentifier>> {
             override fun compute(): CachedValueProvider.Result<List<QCIdentifier>>? {
-                return CachedValueProvider.Result.create<List<QCIdentifier>>(computeImpl(), parent)
+                return CachedValueProvider.Result.create(computeImpl(), parent)
             }
 
             private fun computeImpl(): List<QCIdentifier> {
@@ -84,9 +82,7 @@ class QCReference private constructor(element: PsiElement)
         })
     }
 
-    override fun multiResolve(incompleteCode: Boolean) = resolveAll().map {
-        PsiElementResolveResult(it)
-    }.toTypedArray()
+    override fun multiResolve(incompleteCode: Boolean) = resolveAll().map(::PsiElementResolveResult).toTypedArray()
 
     private fun resolveAll(): Array<QCIdentifier> {
         val processor = CollectProcessor<QCIdentifier>()

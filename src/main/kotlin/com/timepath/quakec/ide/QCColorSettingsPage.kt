@@ -30,7 +30,7 @@ a = (7 * a + 9 / 2);
 
     override fun getAttributeDescriptors() = QCSyntaxHighlighter.DESCRIPTORS
 
-    override fun getColorDescriptors() = ColorDescriptor.EMPTY_ARRAY
+    override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY!!
 
     override fun getDisplayName() = "QuakeC"
 }

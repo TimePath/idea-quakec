@@ -30,7 +30,7 @@ class QCParserDefinition : ParserDefinition {
 
     override fun getStringLiteralElements() = TokenSet.create(QCTypes.TOKEN_STRING)
 
-    override fun createElement(node: ASTNode) = QCTypes.Factory.createElement(node)
+    override fun createElement(node: ASTNode) = QCTypes.Factory.createElement(node)!!
 
     override fun createFile(viewProvider: FileViewProvider) = QCFile(viewProvider)
 

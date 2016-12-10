@@ -3,7 +3,6 @@ package com.timepath.quakec.psi.impl
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
-import com.intellij.psi.PsiReferenceBase
 import com.timepath.quakec.ide.file.QCFileType
 import com.timepath.quakec.ide.reference.QCReference
 import com.timepath.quakec.psi.*
@@ -16,49 +15,48 @@ object QCPsiImplUtil {
         return PsiFileFactory.getInstance(project).createFileFromText(name, QCFileType, text) as QCFile
     }
 
-    fun <T> create(project: Project, newName: String): T {
-        return createFile(project, newName).firstChild as T
-    }
+    @Suppress("UNCHECKED_CAST")
+    fun <T> create(project: Project, newName: String) = createFile(project, newName).firstChild as T
 
-    fun createIdentifier(project: Project, s: String): PsiElement {
-        val variable = create<QCVariableDeclaration>(project, "void $s;")
+    fun createIdentifier(element: PsiElement, newName: String): PsiElement {
+        val variable = create<QCVariableDeclaration>(element.project, "void $newName;")
         return variable.variableList[0].nameIdentifier
     }
 
-    @static fun getName(element: QCIdentifier): String = element.nameIdentifier.text
+    public @static fun getName(element: QCIdentifier) = element.nameIdentifier.text!!
 
-    @static fun setName(element: QCIdentifier, newName: String): QCIdentifier {
-        element.replace(createIdentifier(element.project, newName))
+    public @static fun setName(element: QCIdentifier, newName: String): PsiElement {
+        element.replace(createIdentifier(element, newName))
         return element
     }
 
-    @static fun getReference(self: QCIdentifier): PsiReferenceBase<PsiElement>? = QCReference.create(self)
+    public @static fun getReference(self: QCIdentifier) = QCReference.create(self)
 
-    @static fun getName(element: QCTypedef): String = element.nameIdentifier.text
+    public @static fun getName(element: QCTypedef) = element.nameIdentifier.text!!
 
-    @static fun setName(element: QCTypedef, newName: String): PsiElement {
-        element.nameIdentifier.replace(createIdentifier(element.project, newName))
+    public @static fun setName(element: QCTypedef, newName: String): PsiElement {
+        element.nameIdentifier.replace(createIdentifier(element, newName))
         return element
     }
 
-    @static fun getName(element: QCParameter): String? = element.nameIdentifier?.text
+    public @static fun getName(element: QCParameter) = element.nameIdentifier?.text
 
-    @static fun setName(element: QCParameter, newName: String): PsiElement {
-        element.nameIdentifier?.replace(createIdentifier(element.project, newName))
+    public @static fun setName(element: QCParameter, newName: String): PsiElement {
+        element.nameIdentifier?.replace(createIdentifier(element, newName))
         return element
     }
 
-    @static fun getName(element: QCVariable): String = element.nameIdentifier.text
+    public @static fun getName(element: QCVariable) = element.nameIdentifier.text!!
 
-    @static fun setName(element: QCVariable, newName: String): PsiElement {
-        element.nameIdentifier.replace(createIdentifier(element.project, newName))
+    public @static fun setName(element: QCVariable, newName: String): PsiElement {
+        element.nameIdentifier.replace(createIdentifier(element, newName))
         return element
     }
 
-    @static fun getName(element: QCMethod): String = element.nameIdentifier.text
+    public @static fun getName(element: QCMethod) = element.nameIdentifier.text!!
 
-    @static fun setName(element: QCMethod, newName: String): PsiElement {
-        element.nameIdentifier.replace(createIdentifier(element.project, newName))
+    public @static fun setName(element: QCMethod, newName: String): PsiElement {
+        element.nameIdentifier.replace(createIdentifier(element, newName))
         return element
     }
 

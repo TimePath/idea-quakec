@@ -60,18 +60,14 @@ class QCStructureViewElement(private val root: QCFile) : StructureViewTreeElemen
 
         val treeElements = ContainerUtil.newArrayList<TreeElement>()
         val types = PsiTreeUtil.getChildrenOfTypeAsList(root, QCTypedef::class.java)
-        for (e in types) {
-            treeElements.add(Child(e, PlatformIcons.INTERFACE_ICON))
-        }
+        types.mapTo(treeElements) { Child(it, PlatformIcons.INTERFACE_ICON) }
         val vars = PsiTreeUtil.getChildrenOfTypeAsList(root, QCVariableDeclaration::class.java)
         for (declaration in vars) {
             val icon = when {
                 declaration.type.text.startsWith(".") -> PlatformIcons.FIELD_ICON
                 else -> PlatformIcons.VARIABLE_ICON
             }
-            for (variable in PsiTreeUtil.getChildrenOfTypeAsList(declaration, QCVariable::class.java)) {
-                treeElements.add(Child(variable, icon))
-            }
+            PsiTreeUtil.getChildrenOfTypeAsList(declaration, QCVariable::class.java).mapTo(treeElements) { Child(it, icon) }
         }
         val funcs = PsiTreeUtil.getChildrenOfTypeAsList(root, QCMethod::class.java)
         for (declaration in funcs) {

@@ -4,11 +4,11 @@
 
 1. `git clone`
 2. Import from gradle
-3. Generate [Parser Code](https://github.com/TimePath/idea-quakec/blob/master/src/main/java/com/timepath/quakec/grammar/QC.bnf) with [Grammar-Kit](https://github.com/JetBrains/Grammar-Kit)
-4. Twice
-5. Generate JFlex Lexer
-6. Run JFlex Generator
-7. Run `gradle runIdea`
+3. Generate [Parser Code](https://github.com/TimePath/idea-quakec/blob/master/src/main/java/com/timepath/quakec/grammar/QC.bnf) with [Grammar-Kit](https://github.com/JetBrains/Grammar-Kit) (Ctrl+Shift+G)
+5. Generate JFlex Lexer into `src/gen/com/timepath/quakec/lexer`
+6. Run JFlex Generator into `src/gen/com/timepath/quakec/lexer` (Ctrl+Shift+G)
+7. Generate Parser Code again
+8. Run `gradle runIdea`
 
 ## Resources
 

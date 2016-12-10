@@ -1,6 +1,6 @@
 buildscript {
     ext.versions = [
-            kotlin: '1.0.0'
+            kotlin: '1.0.5-2'
     ]
 
     repositories {
@@ -35,7 +35,7 @@ dependencies {
 
 sourceSets {
     main {
-        java.srcDirs = ['src/main/java', 'gen']
+        java.srcDirs = ['src/main/java', 'src/main/kotlin', 'src/main/gen']
         compileClasspath += configurations.provided
     }
     test {
@@ -45,6 +45,6 @@ sourceSets {
 }
 
 intellij {
-    version '2016.1'
-    pluginName 'qcide'
+    version '2016.3'
+    pluginName 'idea-quakec'
 }

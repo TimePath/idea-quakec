@@ -1,4 +1,5 @@
-qcide.zip
+classes/
+idea-quakec.zip
 
 idea-flex.skeleton
 src/main/java/com/timepath/quakec/lexer/_QCLexer.java
