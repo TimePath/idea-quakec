@@ -11,16 +11,15 @@
 
     extends                 = "com.intellij.extapi.psi.ASTWrapperPsiElement"
 
+    elementTypeHolderClass  = "com.timepath.quakec.psi.QCTypes"
+
+    elementTypeClass        = "com.timepath.quakec.psi.QCElementType"
+    tokenTypeClass          = "com.timepath.quakec.psi.QCTokenType"
+
     psiClassPrefix          = "QC"
     psiImplClassSuffix      = "Impl"
     psiPackage              = "com.timepath.quakec.psi"
     psiImplPackage          = "com.timepath.quakec.psi.impl"
-    psiImplUtilClass        = "com.timepath.quakec.psi.impl.QCPsiImplUtil"
-
-
-    elementTypeHolderClass  = "com.timepath.quakec.psi.QCTypes"
-    elementTypeClass        = "com.timepath.quakec.psi.QCElementType"
-    tokenTypeClass          = "com.timepath.quakec.psi.QCTokenType"
 
     tokens = [
         OP_ASSIGN='='
@@ -145,12 +144,7 @@ private number              ::= token_number
 private string              ::= token_string
 identifier                  ::= token_identifier {
                                     implements="com.intellij.psi.PsiNameIdentifierOwner"
-                                    methods = [
-                                        nameIdentifier  = "token_identifier"
-                                        getName setName
-
-                                        getReference
-                                    ]
+                                    mixin = "com.timepath.quakec.psi.ext.QCIdentifierImplMixin"
                                 }
 
 // literals
@@ -167,20 +161,12 @@ modifier                    ::= 'local' | 'const' | 'static' | 'noref'
 
 typedef                     ::= 'typedef' s? type s? (parameter_list s?)? identifier (s? ';') {
                                     implements="com.intellij.psi.PsiNamedElement"
-                                    methods = [
-                                        nameIdentifier  = "identifier"
-
-                                        getName setName
-                                    ]
+                                    mixin = "com.timepath.quakec.psi.ext.QCTypedefImplMixin"
                                 }
 
 parameter                   ::= type (s? parameter_list)? (s? identifier (s? '=' s? expression)?)? {
                                     implements="com.intellij.psi.PsiNamedElement"
-                                    methods = [
-                                        nameIdentifier  = "identifier"
-
-                                        getName setName
-                                    ]
+                                    mixin = "com.timepath.quakec.psi.ext.QCParameterImplMixin"
                                 }
 private parameter_list_     ::= '...' (s? identifier)? | parameter? (s? ',' s? parameter)* (s? ',' s? ('...' (s? identifier)? | parameter))?
 parameter_list              ::= '(' s? parameter_list_ s? ')'
@@ -191,11 +177,9 @@ private variable_           ::= identifier s? variable_arraysize (s? '=' s? '{' 
                             | identifier (s? '=' s? expression)?
 variable                    ::= variable_ {
                                     implements="com.intellij.psi.PsiNamedElement"
+                                    mixin = "com.timepath.quakec.psi.ext.QCVariableImplMixin"
                                     methods = [
                                         value           = "expression"
-                                        nameIdentifier  = "identifier"
-
-                                        getName setName
                                     ]
                                 }
 private var_normal          ::= variable (s? ',' s? variable)*
@@ -206,11 +190,7 @@ private func_old            ::= type s? parameter_list s? identifier s? (';' | '
 private func_new            ::= type s? identifier s? parameter_list s? ('=' s? builtin_method | block | ';')
 method                      ::= variable_modifiers (var_func | func_old | func_new)  {
                                     implements="com.intellij.psi.PsiNamedElement"
-                                    methods = [
-                                        nameIdentifier  = "identifier[first]"
-
-                                        getName setName
-                                    ]
+                                    mixin = "com.timepath.quakec.psi.ext.QCMethodImplMixin"
                                 }
 
 // statements

@@ -1,50 +1,96 @@
 buildscript {
-    ext.versions = [
-            kotlin: '1.0.0'
-    ]
+    ext.ideaVersion = '2017.2'
 
     repositories {
         mavenLocal()
         mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
+        jcenter()
+        maven { url 'https://dl.bintray.com/jetbrains/intellij-plugin-service' }
+        maven { url 'https://jitpack.io' }
     }
 
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
-        classpath 'gradle.plugin.org.jetbrains:gradle-intellij-plugin:0.0.43'
+        classpath 'com.github.hurricup:gradle-grammar-kit-plugin:2017.1.1'
     }
 }
 
-repositories {
-    mavenLocal()
-    mavenCentral()
+plugins {
+    id 'org.jetbrains.intellij' version '0.2.5'
+    id 'org.jetbrains.kotlin.jvm' version '1.1.3'
 }
 
-apply plugin: 'kotlin'
-apply plugin: 'org.jetbrains.intellij'
+import org.jetbrains.grammarkit.tasks.GenerateLexer
+import org.jetbrains.grammarkit.tasks.GenerateParser
 
 configurations {
     provided
 }
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-    compile "org.jetbrains.kotlin:kotlin-runtime:${versions.kotlin}"
-    provided fileTree(dir: 'idea-libs', include: '*.jar')
+allprojects {
+    apply plugin: 'idea'
+    idea {
+        module {
+            generatedSourceDirs += file('src/gen')
+        }
+    }
+
+    apply plugin: 'org.jetbrains.intellij'
+    intellij {
+        version ideaVersion
+    }
+
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
+    compileKotlin {
+        kotlinOptions {
+            languageVersion = '1.1'
+            apiVersion = '1.1'
+        }
+    }
+
+    tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+    sourceSets {
+        main {
+            java.srcDirs += 'src/gen'
+        }
+    }
+
+    apply plugin: 'org.jetbrains.grammarkit'
+    grammarKit {
+        grammarKitRelease = '1.5.2'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url 'https://dl.bintray.com/jetbrains/markdown' }
+        maven { url 'https://jitpack.io' }
+    }
+
+    dependencies {
+    }
 }
 
-sourceSets {
-    main {
-        java.srcDirs = ['src/main/java', 'gen']
-        compileClasspath += configurations.provided
-    }
-    test {
-        compileClasspath += configurations.provided
-        runtimeClasspath += configurations.provided
-    }
+project(':') {
+    version = '1.0-SNAPSHOT'
+    intellij { pluginName 'qcide' }
 }
 
-intellij {
-    version '2016.1'
-    pluginName 'qcide'
+task generateLexer(type: GenerateLexer) {
+    source 'src/main/java/com/timepath/quakec/lexer/_QCLexer.flex'
+    targetDir 'src/gen/com/timepath/quakec/lexer'
+    targetClass '_QCLexer'
+    purgeOldFiles = true
 }
+task generateParser(type: GenerateParser) {
+    source 'src/main/java/com/timepath/quakec/grammar/QC.bnf'
+    targetRoot = 'src/gen'
+    pathToParser '/com/timepath/quakec/parser/QCParser.java'
+    pathToPsiRoot '/com/timepath/quakec/psi/impl'
+    purgeOldFiles = true
+}
+compileKotlin.dependsOn generateLexer, generateParser

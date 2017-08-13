@@ -1,2 +1,1 @@
 language: java
-before_install: ./get-idea-libs.sh
